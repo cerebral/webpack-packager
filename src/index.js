@@ -16,7 +16,7 @@ function verifyAvailability(req, res, next) {
   if (isAvailable) {
     next();
   } else {
-    res.send(503);
+    res.sendStatus(503);
   }
 }
 
@@ -47,6 +47,7 @@ function extractAndBundle (req, res) {
       isAvailable = true;
     })
     .catch(function (error) {
+      isAvailable = true;
       res.status(500).send({
         error: error.message
       });
