@@ -48,7 +48,7 @@ module.exports = function readPackage (packageName, filePath) {
             } else if (!fileStat.isDirectory()) {
               return utils.readFile(currentPath)
                 .then(function (fileContent) {
-                  if (isValidFile(fileOrDir, currentPath, fileContent, packageName)) {
+                  if (isValidFile(fileOrDir, currentPath, fileContent || '', packageName)) {
                     return currentPath;
                   }
                 });

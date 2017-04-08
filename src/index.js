@@ -47,6 +47,7 @@ function extractAndBundle (req, res) {
       isAvailable = true;
     })
     .catch(function (error) {
+      console.log(error);
       isAvailable = true;
       res.status(500).send({
         error: error.message

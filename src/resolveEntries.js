@@ -11,10 +11,10 @@ module.exports = function resolveEntries (packages) {
     }))
       .then(function (results) {
         return results.reduce(function (entries, packageJson) {
-          var main = packageJson.main;
-          var browser = packageJson.browser;
-          var module = packageJson.module;
-          var unpkg = packageJson.unpkg;
+          var main = utils.evaluateEntry(packageJson.main);
+          var browser = utils.evaluateEntry(packageJson.browser);
+          var module = utils.evaluateEntry(packageJson.module);
+          var unpkg = utils.evaluateEntry(packageJson.unpkg);
           var mainEntry = 'index.js';
 
           if (unpkg && !utils.isPrebundledFile(unpkg)) {

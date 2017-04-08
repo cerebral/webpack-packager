@@ -105,5 +105,16 @@ module.exports = {
 
       return externals;
     }, {});
+  },
+  evaluateEntry: function (entry) {
+    if (!entry) {
+      return null;
+    }
+
+    if (typeof entry === 'string') {
+      return entry;
+    }
+
+    return entry[Object.keys(entry)[0]];
   }
 }
