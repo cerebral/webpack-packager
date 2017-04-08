@@ -56,7 +56,7 @@ function extractAndBundle (req, res) {
 
 app.get('/*', verifyAvailability, extractPackages, extractAndBundle);
 
-var server = app.listen(process.env.NODE_ENV === 'production' ? process.env.PORT : 5500);
+var server = app.listen(process.env.NODE_ENV === 'production' ? 8080: 5500);
 
 process.on('SIGTERM', function () {
   server.close(function () {
