@@ -65,7 +65,7 @@ module.exports = {
   cleanManifestContent: function (manifest, entries) {
     var entryKeys = Object.keys(entries);
     var entryPaths = entryKeys.reduce(function (currentEntryPaths, entryKey) {
-      return currentEntryPaths.concat(entries[entryKey]);
+      return currentEntryPaths.concat(path.join(entryKey, entries[entryKey]));
     }, []);
     var projectPath = path.resolve();
 
@@ -94,7 +94,7 @@ module.exports = {
       var directPath = manifestKey.substr(2).split('/').slice(1).join('/');
       var fileName = path.basename(directPath)
       var extName = path.extname(directPath)
-      var baseName = path.basename(fileName, extName)
+      var baseName = path.basename(fileName, extName);
 
       externals[directPath] = 'dll_bundle(' + manifest.content[manifestKey] + ')';
       externals[path.dirname(directPath) + '/' + baseName] = 'dll_bundle(' + manifest.content[manifestKey] + ')';
