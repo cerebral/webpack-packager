@@ -1,0 +1,31 @@
+{
+  "name": "webpack-packager",
+  "version": "1.0.0",
+  "description": "A service that packages DLL bundles and manifests",
+  "main": "src/index.js",
+  "dependencies": {
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
+    "json-loader": "^0.5.4",
+    "react": "15.4.2",
+    "react-dom": "15.4.2",
+    "redux": "3.6.0",
+    "string-hash": "^1.1.3",
+    "webpack": "^2.3.3",
+    "yarn": "^0.21.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cerebral/webpack-packager.git"
+  },
+  "author": "Christian Alfoni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cerebral/webpack-packager/issues"
+  },
+  "homepage": "https://github.com/cerebral/webpack-packager#readme"
+}
