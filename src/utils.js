@@ -71,7 +71,7 @@ module.exports = {
 
     return Object.keys(manifest.content).reduce(function (currentManifest, key) {
       var entryMatchIndex = entryPaths.reduce(function (matchIndex, entryPath, index) {
-        if (key.indexOf(entryPath) >= 0) {
+        if (key === '.' + path.join(projectPath, 'node_modules', entryPath)) {
           return index;
         }
 
