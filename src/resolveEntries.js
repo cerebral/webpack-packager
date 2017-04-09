@@ -4,7 +4,7 @@ var utils = require('./utils');
 module.exports = function resolveEntries (packages) {
   return function () {
     return Promise.all(packages.map(function (package) {
-      var packageName = package.split('@')[0];
+      var packageName = utils.getPackageName(package);
 
       return utils.readFile(path.resolve('node_modules', packageName, 'package.json'))
         .then((result) => JSON.parse(result));

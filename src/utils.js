@@ -116,5 +116,17 @@ module.exports = {
     }
 
     return entry[Object.keys(entry)[0]];
+  },
+  getPackageName: function (package) {
+    const nameSplit = package.split('@');
+
+    // Leading @
+    if (!nameSplit[0]) {
+      nameSplit.shift();
+
+      return '@' + nameSplit[0];
+    }
+
+    return nameSplit[0];
   }
 }
