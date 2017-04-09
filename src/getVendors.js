@@ -10,7 +10,7 @@ module.exports = function (entries) {
   }))
     .then(function (entryPointsList) {
       return entryPointsList.reduce(function (entryPoints, entryPointList, index) {
-        var directEntryPath = entries[entryKeys[index]];
+        var directEntryPath = path.resolve('node_modules', entryKeys[index], entries[entryKeys[index]]);
 
         if (entryPointList.indexOf(directEntryPath) === -1) {
           entryPointList.push(directEntryPath);

@@ -19,10 +19,10 @@ module.exports = function resolveEntries (packages) {
 
           if (unpkg && !utils.isPrebundledFile(unpkg)) {
             mainEntry = unpkg;
-          } else if (main && !utils.isPrebundledFile(main)) {
-            mainEntry = main;
           } else if (browser && !utils.isPrebundledFile(browser)) {
             mainEntry = browser;
+          } else if (main && !utils.isPrebundledFile(main)) {
+            mainEntry = main;
           } else if (module && !utils.isPrebundledFile(module)) {
             mainEntry = module;
           }
