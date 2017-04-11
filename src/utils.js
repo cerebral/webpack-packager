@@ -89,7 +89,7 @@ module.exports = {
       return currentManifest;
     }, {});
   },
-  createExternals: function (manifest) {
+  createExternals: function (entries, manifest) {
     return Object.keys(manifest.content).reduce(function (externals, manifestKey, index) {
       var directPath = manifestKey.substr(2).split('/').slice(1).join('/');
       var fileName = path.basename(directPath)
@@ -128,5 +128,14 @@ module.exports = {
     }
 
     return nameSplit[0];
+  },
+  isValidPackages: function (packages) {
+    return packages.split('+').reduce(function (isValid, package) {
+      if (package.indexOf('@') === -1) {
+        return false
+      }
+
+      return isValid
+    }, true)
   }
 }
