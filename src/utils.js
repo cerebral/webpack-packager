@@ -89,7 +89,7 @@ module.exports = {
       return currentManifest;
     }, {});
   },
-  createExternals: function (entries, manifest) {
+  createExternals: function (manifest) {
     return Object.keys(manifest.content).reduce(function (externals, manifestKey, index) {
       var directPath = manifestKey.substr(2).split('/').slice(1).join('/');
       var fileName = path.basename(directPath)

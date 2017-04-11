@@ -6,8 +6,6 @@ const app = require ('./app');
 const PORT = process.env.NODE_ENV === 'production' ? 80 : 5500;
 const numCPUs = os.cpus().length;
 
-
-
 if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
 
