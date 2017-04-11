@@ -22,7 +22,11 @@ function verifyAvailability(req, res, next) {
 
 function extractPackages (req, res, next) {
   req.params.packages = req.params['0'];
-  next();
+  if (!utils.isValidPackages(req.params.packages)) {
+    res.sendStatus(404);
+  } else {
+    next();
+  }
 }
 
 function extractAndBundle (req, res) {
