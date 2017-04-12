@@ -1,6 +1,6 @@
 const cluster = require('cluster');
 const os = require('os');
-
+const exec = require('child_process').exec;
 const app = require ('./app');
 
 const PORT = process.env.NODE_ENV === 'production' ? 80 : 5500;
@@ -23,3 +23,8 @@ if (cluster.isMaster) {
 
   console.log(`Worker ${process.pid} started`);
 }
+
+// Delete packages every day, keep clean
+setInterval(function () {
+  exec('rm -rf packages && mkdir packages')
+}, 86400000)
