@@ -25,6 +25,8 @@ module.exports = function resolveEntries (packages) {
             mainEntry = module;
           } else if (main && !utils.isPrebundledFile(main)) {
             mainEntry = main;
+          } else if (main) {
+            mainEntry = main;
           }
 
           if (!path.extname(mainEntry)) {
