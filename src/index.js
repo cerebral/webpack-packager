@@ -3,7 +3,7 @@ const os = require('os');
 
 const app = require ('./app');
 
-const PORT = process.env.NODE_ENV === 'production' ? 80 : 5500;
+const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 5500);
 const numCPUs = os.cpus().length;
 
 if (cluster.isMaster) {
