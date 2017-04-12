@@ -6,7 +6,7 @@ module.exports = function resolveEntries (packages) {
     return Promise.all(packages.map(function (package) {
       var packageName = utils.getPackageName(package);
 
-      return utils.readFile(path.resolve('node_modules', packageName, 'package.json'))
+      return utils.readFile(path.resolve('packages', 'node_modules', packageName, 'package.json'))
         .then((result) => JSON.parse(result));
     }))
       .then(function (results) {

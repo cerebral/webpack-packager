@@ -71,7 +71,7 @@ module.exports = {
 
     return Object.keys(manifest.content).reduce(function (currentManifest, key) {
       var entryMatchIndex = entryPaths.reduce(function (matchIndex, entryPath, index) {
-        if (key === '.' + path.join(projectPath, 'node_modules', entryPath)) {
+        if (key === '.' + path.join(projectPath, 'packages', 'node_modules', entryPath)) {
           return index;
         }
 
@@ -81,10 +81,10 @@ module.exports = {
       var pathKey = key.replace(projectPath, '');
 
       if (entryMatchIndex >= 0) {
-        pathKey = './' + path.join('node_modules/', entryKeys[entryMatchIndex]);
+        pathKey = './' + path.join('packages', 'node_modules', entryKeys[entryMatchIndex]);
       }
 
-      currentManifest[pathKey] = manifest.content[key].id;
+      currentManifest[pathKey.replace('./packages', '.')] = manifest.content[key].id;
 
       return currentManifest;
     }, {});

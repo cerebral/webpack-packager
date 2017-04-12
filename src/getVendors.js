@@ -6,11 +6,11 @@ module.exports = function (entries) {
   var entryKeys = Object.keys(entries);
 
   return Promise.all(entryKeys.map(function (entryKey) {
-    return findEntryPoints(entryKey, path.resolve('node_modules', entryKey));
+    return findEntryPoints(entryKey, path.resolve('packages', 'node_modules', entryKey));
   }))
     .then(function (entryPointsList) {
       return entryPointsList.reduce(function (entryPoints, entryPointList, index) {
-        var directEntryPath = path.resolve('node_modules', entryKeys[index], entries[entryKeys[index]]);
+        var directEntryPath = path.resolve('packages', 'node_modules', entryKeys[index], entries[entryKeys[index]]);
 
         if (entryPointList.indexOf(directEntryPath) === -1) {
           entryPointList.push(directEntryPath);
