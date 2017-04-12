@@ -21,6 +21,9 @@ module.exports = function (entries) {
          }),
          new webpack.optimize.UglifyJsPlugin({minimize: true, mangle: false})
        ],
+       resolve: {
+         modules: [path.resolve('packages', 'node_modules')]
+       },
        module: {
          loaders: [{
            test: /\.json$/,

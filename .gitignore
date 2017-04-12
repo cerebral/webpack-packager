@@ -4,3 +4,4 @@ dll.js
 manifest.json
 node_modules
 *.log
+packages/**/*

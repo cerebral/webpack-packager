@@ -33,22 +33,9 @@ function extractAndBundle (req, res) {
   var packages = req.params.packages.split('+');
   isAvailable = false
 
-  console.log('Extracting: ' + packages);
   extract(packages)
-    .then(function (arg) {
-      console.log('Extracted');
-      return arg
-    })
     .then(resolveEntries(packages))
-    .then(function (arg) {
-      console.log('Resolved entries, starting bundle...');
-      return arg
-    })
     .then(bundle)
-    .then(function (arg) {
-      console.log('Bundled, reading files...');
-      return arg
-    })
     .then(function respond () {
       return Promise.all([
         utils.readFile(path.resolve('manifest.json')),
@@ -56,7 +43,6 @@ function extractAndBundle (req, res) {
       ]);
     })
     .then(function (files) {
-      console.log('Files read, sending them over...');
       res.send({
         manifest: files[0],
         dll: files[1]
@@ -64,7 +50,6 @@ function extractAndBundle (req, res) {
       isAvailable = true;
     })
     .catch(function (error) {
-      console.log(error);
       isAvailable = true;
       res.status(500).send({
         error: error.message
