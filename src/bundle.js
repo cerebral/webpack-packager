@@ -50,11 +50,14 @@ module.exports = function (packagePath) {
           .then(function (manifestJson) {
             var manifest = JSON.parse(manifestJson);
 
-            manifest.content = utils.cleanManifestContent(manifest, entries);
+            manifest.content = utils.cleanManifestContent(manifest, entries, packagePath);
             manifest.externals = utils.createExternals(manifest);
 
             return utils.writeFile(path.resolve(packagePath, 'manifest.json'), JSON.stringify(manifest, null, 2));
-          });
+          })
+          .catch((err) => {
+            console.log(err);
+          })
       });
   }
 }

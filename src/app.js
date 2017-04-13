@@ -6,11 +6,11 @@ var extract = require('./extract');
 var resolveEntries = require('./resolveEntries');
 var bundle = require('./bundle');
 var utils = require('./utils');
-
+var exec = require('child_process').exec;
 
 app.use(compression());
 
-var isAvailable = true
+var isAvailable = true;
 
 function verifyAvailability(req, res, next) {
   if (isAvailable) {
@@ -32,7 +32,7 @@ function extractPackages (req, res, next) {
 function extractAndBundle (req, res) {
   var packages = req.params.packages.split('+');
   var packagePath = `packages/${utils.getHash(packages)}`;
-  isAvailable = false
+  isAvailable = false;
   extract(packages, packagePath)
     .then(resolveEntries(packages, packagePath))
     .then(bundle(packagePath))
@@ -48,12 +48,22 @@ function extractAndBundle (req, res) {
         dll: files[1]
       });
       isAvailable = true;
+      exec(`rm -rf ${packagePath}`, function (err, stdout, stderr) {
+        if (err) {
+          console.log(err);
+        }
+      })
     })
     .catch(function (error) {
       isAvailable = true;
       res.status(500).send({
         error: error.message
       });
+      exec(`rm -rf ${packagePath}`, function (err, stdout, stderr) {
+        if (err) {
+          console.log(err);
+        }
+      })
     });
 }
 
