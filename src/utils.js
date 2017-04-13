@@ -3,6 +3,19 @@ var hash = require('string-hash');
 var path = require('path');
 
 module.exports = {
+  getHash: function (packages) {
+    if (!packages || Object.keys(packages).length === 0) {
+      return null;
+    }
+    var packagesList = Object.keys(packages).map(function (key) {
+      return key + ':' + packages[key];
+    }).sort(function (a, b) {
+      if (a < b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+    return String(hash(JSON.stringify(packagesList)));
+  },
   readFile: function (path) {
     return new Promise(function (resolve, reject) {
       fs.readFile(path, 'utf-8', function (error, content) {

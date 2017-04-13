@@ -31,15 +31,15 @@ function extractPackages (req, res, next) {
 
 function extractAndBundle (req, res) {
   var packages = req.params.packages.split('+');
+  var packagePath = `packages/${utils.getHash(packages)}`;
   isAvailable = false
-
-  extract(packages)
-    .then(resolveEntries(packages))
-    .then(bundle)
+  extract(packages, packagePath)
+    .then(resolveEntries(packages, packagePath))
+    .then(bundle(packagePath))
     .then(function respond () {
       return Promise.all([
-        utils.readFile(path.resolve('manifest.json')),
-        utils.readFile(path.resolve('dll.js'))
+        utils.readFile(path.resolve(packagePath, 'manifest.json')),
+        utils.readFile(path.resolve(packagePath, 'dll.js'))
       ]);
     })
     .then(function (files) {
