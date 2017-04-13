@@ -3,6 +3,19 @@ var hash = require('string-hash');
 var path = require('path');
 
 module.exports = {
+  getHash: function (packages) {
+    if (!packages || Object.keys(packages).length === 0) {
+      return null;
+    }
+    var packagesList = Object.keys(packages).map(function (key) {
+      return key + ':' + packages[key];
+    }).sort(function (a, b) {
+      if (a < b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+    return String(hash(JSON.stringify(packagesList)));
+  },
   readFile: function (path) {
     return new Promise(function (resolve, reject) {
       fs.readFile(path, 'utf-8', function (error, content) {
@@ -62,7 +75,7 @@ module.exports = {
       file.match(/.bundle.js$/)
     )
   },
-  cleanManifestContent: function (manifest, entries) {
+  cleanManifestContent: function (manifest, entries, packagePath) {
     var entryKeys = Object.keys(entries);
     var entryPaths = entryKeys.reduce(function (currentEntryPaths, entryKey) {
       return currentEntryPaths.concat(path.join(entryKey, entries[entryKey]));
@@ -71,7 +84,7 @@ module.exports = {
 
     return Object.keys(manifest.content).reduce(function (currentManifest, key) {
       var entryMatchIndex = entryPaths.reduce(function (matchIndex, entryPath, index) {
-        if (key === '.' + path.join(projectPath, 'packages', 'node_modules', entryPath)) {
+        if (key === '.' + path.join(projectPath, packagePath, 'node_modules', entryPath)) {
           return index;
         }
 
@@ -81,10 +94,10 @@ module.exports = {
       var pathKey = key.replace(projectPath, '');
 
       if (entryMatchIndex >= 0) {
-        pathKey = './' + path.join('packages', 'node_modules', entryKeys[entryMatchIndex]);
+        pathKey = './' + path.join(packagePath, 'node_modules', entryKeys[entryMatchIndex]);
       }
 
-      currentManifest[pathKey.replace('./packages', '.')] = manifest.content[key].id;
+      currentManifest[pathKey.replace(packagePath + '/', '')] = manifest.content[key].id;
 
       return currentManifest;
     }, {});

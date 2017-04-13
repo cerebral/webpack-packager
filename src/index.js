@@ -1,30 +1,10 @@
-const cluster = require('cluster');
+const cluster = require('express-cluster');
 const os = require('os');
-const exec = require('child_process').exec;
 const app = require ('./app');
 
 const PORT = process.env.NODE_ENV === 'production' ? 80 : 5500;
-const numCPUs = os.cpus().length;
 
-if (cluster.isMaster) {
-  console.log(`Master ${process.pid} is running`);
-
-  // Fork workers
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
-
-  cluster.on('exit', (worker, code, signal) => {
-    console.log(`Worker ${worker.process.pid} died`);
-    cluster.fork();
-  })
-} else {
-  const server = app.listen(PORT);
-
-  console.log(`Worker ${process.pid} started`);
-}
-
-// Delete packages every day, keep clean
-setInterval(function () {
-  exec('rm -rf packages && mkdir packages')
-}, 86400000)
+cluster(function (worker) {
+  console.log('Hello from worker worker ' + worker.id);
+  return app.listen(PORT)
+});
