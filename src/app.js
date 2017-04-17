@@ -32,7 +32,10 @@ function extractPackages (req, res, next) {
 function extractAndBundle (req, res) {
   var packages = req.params.packages.split('+');
   var packagePath = `packages/${utils.getHash(packages)}`;
+  var currentTime = Date.now()
+
   isAvailable = false;
+  console.log('Started - ' + packages.join(', ') + ' - ' + new Date(currentTime))
   extract(packages, packagePath)
     .then(resolveEntries(packages, packagePath))
     .then(bundle(packagePath))
@@ -43,6 +46,9 @@ function extractAndBundle (req, res) {
       ]);
     })
     .then(function (files) {
+      console.log('Success - ' + utils.getDuration(currentTime)  + 's')
+      currentTime = Date.now()
+
       res.send({
         manifest: files[0],
         dll: files[1]
@@ -52,9 +58,13 @@ function extractAndBundle (req, res) {
         if (err) {
           console.log(err);
         }
+        console.log('Cleaned - ' + utils.getDuration(currentTime)  + 's')
       })
     })
     .catch(function (error) {
+      console.log('Error - ' + error.message + ' - ' + utils.getDuration(currentTime) + 's')
+      currentTime = Date.now()
+
       isAvailable = true;
       res.status(500).send({
         error: error.message
@@ -63,6 +73,7 @@ function extractAndBundle (req, res) {
         if (err) {
           console.log(err);
         }
+        console.log('Cleaned - ' + utils.getDuration(currentTime)  + 's')
       })
     });
 }
