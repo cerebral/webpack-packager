@@ -5,6 +5,7 @@ function isValidFile (file, filePath, content, packageName) {
   return (
     (path.extname(file) === '.js' || path.extname(file) === '.css') &&
     file[0] !== '_' &&
+    file !== 'gulpfile.js' &&
     !utils.isPrebundledFile(file) &&
     file.indexOf('.test.js') === -1 &&
     file.indexOf('.spec.js') === -1 &&

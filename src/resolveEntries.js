@@ -15,7 +15,7 @@ module.exports = function resolveEntries (packages, packagePath) {
           var browser = utils.evaluateEntry(packageJson.browser);
           var module = utils.evaluateEntry(packageJson.module);
           var unpkg = utils.evaluateEntry(packageJson.unpkg);
-          var mainEntry = 'index.js';
+          var mainEntry = '';
 
           if (unpkg && !utils.isPrebundledFile(unpkg)) {
             mainEntry = unpkg;
@@ -29,7 +29,7 @@ module.exports = function resolveEntries (packages, packagePath) {
             mainEntry = main;
           }
 
-          if (!path.extname(mainEntry)) {
+          if (mainEntry && !path.extname(mainEntry)) {
             mainEntry += '.js';
           }
 
