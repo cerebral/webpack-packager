@@ -7,6 +7,7 @@ var resolveEntries = require('./resolveEntries');
 var bundle = require('./bundle');
 var utils = require('./utils');
 var exec = require('child_process').exec;
+var fs = require('fs');
 
 app.use(compression());
 
@@ -66,15 +67,17 @@ function extractAndBundle (req, res) {
       currentTime = Date.now()
 
       isAvailable = true;
-      res.status(500).send({
-        error: error.message
-      });
-      exec(`rm -rf ${packagePath}`, function (err, stdout, stderr) {
-        if (err) {
-          console.log(err);
-        }
-        console.log('Cleaned - ' + utils.getDuration(currentTime)  + 's')
-      })
+      res.status(500).send(error.message);
+
+      var stats = fs.lstatSync(packagePath);
+      if (stats.isDirectory()) {
+        exec(`rm -rf ${packagePath}`, function (err, stdout, stderr) {
+          if (err) {
+            console.log(err);
+          }
+          console.log('Cleaned - ' + utils.getDuration(currentTime)  + 's')
+        })
+      }
     });
 }
 
