@@ -32,11 +32,14 @@ var invalidDirs = [
   'node_modules'
 ];
 
-function isValidDir (dir) {
-  return invalidDirs.indexOf(dir) === -1;
+function isValidDir (dir, dirOverride) {
+  return (
+    path.join('/', dir) === path.join('/', dirOverride) ||
+    invalidDirs.indexOf(dir) === -1
+  )
 }
 
-module.exports = function readPackage (packageName, filePath) {
+module.exports = function readPackage (packageName, filePath, dirOverride) {
   return utils.readDir(filePath)
     .then(function (dir) {
       return Promise.all(dir.map(function (fileOrDir) {
@@ -44,8 +47,8 @@ module.exports = function readPackage (packageName, filePath) {
 
         return utils.stat(currentPath)
           .then(function (fileStat) {
-            if (fileStat.isDirectory() && isValidDir(fileOrDir)) {
-              return readPackage(packageName, currentPath);
+            if (fileStat.isDirectory() && isValidDir(fileOrDir, dirOverride)) {
+              return readPackage(packageName, currentPath, dirOverride);
             } else if (!fileStat.isDirectory()) {
               return utils.readFile(currentPath)
                 .then(function (fileContent) {
