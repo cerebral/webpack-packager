@@ -1,19 +1,14 @@
 var path = require('path');
 var utils = require('./utils');
 
-function isValidFile (file, filePath, content, packageName) {
+function isValidFile (file, filePath, packageName) {
   return (
     (path.extname(file) === '.js' || path.extname(file) === '.css') &&
     file[0] !== '_' &&
     file !== 'gulpfile.js' &&
     !utils.isPrebundledFile(file) &&
     file.indexOf('.test.js') === -1 &&
-    file.indexOf('.spec.js') === -1 &&
-    (
-      (encodeURI(content).split(/%..|./).length - 1) < 102400 ||
-      file === 'index.js' ||
-      file === packageName + '.js'
-    )
+    file.indexOf('.spec.js') === -1
   );
 }
 
@@ -44,18 +39,12 @@ module.exports = function readPackage (packageName, filePath, dirOverride) {
     .then(function (dir) {
       return Promise.all(dir.map(function (fileOrDir) {
         var currentPath = path.join(filePath, fileOrDir);
-
         return utils.stat(currentPath)
           .then(function (fileStat) {
             if (fileStat.isDirectory() && isValidDir(fileOrDir, dirOverride)) {
               return readPackage(packageName, currentPath, dirOverride);
-            } else if (!fileStat.isDirectory()) {
-              return utils.readFile(currentPath)
-                .then(function (fileContent) {
-                  if (isValidFile(fileOrDir, currentPath, fileContent || '', packageName)) {
-                    return currentPath;
-                  }
-                });
+            } else if (!fileStat.isDirectory() && isValidFile(fileOrDir, currentPath, packageName)) {
+              return currentPath;
             }
           });
       }))

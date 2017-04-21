@@ -25,10 +25,18 @@ module.exports = function (packagePath) {
           resolve: {
             modules: [path.resolve(packagePath, 'node_modules')]
           },
+          resolveLoader: {
+            alias: {
+              'custom-css-loader': require.resolve('./customCssLoader')
+            }
+          },
           module: {
             loaders: [{
               test: /\.json$/,
-              loader: 'json'
+              use: 'json-loader'
+            }, {
+              test: /\.css$/,
+              use: 'custom-css-loader'
             }]
           }
         };
