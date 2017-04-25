@@ -10,33 +10,66 @@ module.exports = function resolveEntries (packages, packagePath) {
         .then((result) => JSON.parse(result));
     }))
       .then(function (results) {
-        return results.reduce(function (entries, packageJson) {
+        return results.reduce(function (entriesPromise, packageJson) {
           var main = utils.evaluateEntry(packageJson.main);
           var browser = utils.evaluateEntry(packageJson.browser);
           var module = utils.evaluateEntry(packageJson.module);
           var unpkg = utils.evaluateEntry(packageJson.unpkg);
-          var mainEntry = '';
+          var bin = utils.evaluateEntry(packageJson.bin);
+          var entryList = [
+            utils.evaluateEntry(packageJson.unpkg),
+            utils.evaluateEntry(packageJson.browser),
+            utils.evaluateEntry(packageJson.module),
+            utils.evaluateEntry(packageJson.main),
+            utils.evaluateEntry(packageJson.bin)
+          ].filter(function (entry) {
+            return Boolean(entry);
+          }).sort(function (entryA, entryB) {
+            if (utils.isPrebundledFile(entryA) && !utils.isPrebundledFile(entryB)) {
+              return 1;
+            } else if (!utils.isPrebundledFile(entryA) && utils.isPrebundledFile(entryB)) {
+              return -1;
+            }
 
-          if (unpkg && !utils.isPrebundledFile(unpkg)) {
-            mainEntry = unpkg;
-          } else if (browser && !utils.isPrebundledFile(browser)) {
-            mainEntry = browser;
-          } else if (module && !utils.isPrebundledFile(module)) {
-            mainEntry = module;
-          } else if (main && !utils.isPrebundledFile(main)) {
-            mainEntry = main;
-          } else if (main) {
-            mainEntry = main;
+            return 0;
+          })
+
+          var mainEntry = entryList.shift()
+
+          if (path.extname(mainEntry)) {
+            return entriesPromise.then(function (entries) {
+              return Object.assign(entries, {
+                [packageJson.name]: {
+                  main: mainEntry,
+                  other: entryList
+                }
+              });
+            });
+          } else {
+            return utils.stat(path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry))
+              .then(function (stat) {
+                return entriesPromise.then(function (entries) {
+                  return Object.assign(entries, {
+                    [packageJson.name]: {
+                      main: mainEntry,
+                      other: entryList
+                    }
+                  });
+                });
+              })
+              .catch(function () {
+                return entriesPromise.then(function (entries) {
+                  return Object.assign(entries, {
+                    [packageJson.name]: {
+                      main: mainEntry + '.js',
+                      other: entryList
+                    }
+                  });
+                });
+              })
           }
 
-          if (mainEntry && !path.extname(mainEntry)) {
-            mainEntry += '.js';
-          }
-
-          entries[packageJson.name] = mainEntry;
-
-          return entries;
-        }, {})
+        }, Promise.resolve({}))
       });
   }
 }

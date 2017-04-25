@@ -78,7 +78,7 @@ module.exports = {
   cleanManifestContent: function (manifest, entries, packagePath) {
     var entryKeys = Object.keys(entries);
     var entryPaths = entryKeys.reduce(function (currentEntryPaths, entryKey) {
-      return currentEntryPaths.concat(path.join(entryKey, entries[entryKey]));
+      return currentEntryPaths.concat(path.join(entryKey, entries[entryKey].main));
     }, []);
     var projectPath = path.resolve();
 

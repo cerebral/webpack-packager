@@ -6,14 +6,19 @@ function isValidFile (file, filePath, packageName) {
     (path.extname(file) === '.js' || path.extname(file) === '.css') &&
     file[0] !== '_' &&
     file !== 'gulpfile.js' &&
+    !(file.substr(0, packageName.length) === packageName && path.extname(file) === '.js') &&
     !utils.isPrebundledFile(file) &&
     file.indexOf('.test.js') === -1 &&
-    file.indexOf('.spec.js') === -1
+    file.indexOf('-test.js') === -1 &&
+    file.indexOf('.spec.js') === -1 &&
+    file.indexOf('-spec.js') === -1
   );
 }
 
 var invalidDirs = [
-  'dist',
+  'demo',
+  'docs',
+  'benchmark',
   'es6',
   'es',
   'src',
@@ -34,19 +39,24 @@ function isValidDir (dir, dirOverride) {
   )
 }
 
-module.exports = function readPackage (packageName, filePath, dirOverride) {
+module.exports = function readPackage (packageName, filePath, dirOverride, blackListedEntries) {
   return utils.readDir(filePath)
     .then(function (dir) {
       return Promise.all(dir.map(function (fileOrDir) {
         var currentPath = path.join(filePath, fileOrDir);
-        return utils.stat(currentPath)
-          .then(function (fileStat) {
-            if (fileStat.isDirectory() && isValidDir(fileOrDir, dirOverride)) {
-              return readPackage(packageName, currentPath, dirOverride);
-            } else if (!fileStat.isDirectory() && isValidFile(fileOrDir, currentPath, packageName)) {
-              return currentPath;
-            }
-          });
+
+        if (blackListedEntries.indexOf(currentPath) >= 0) {
+          return;
+        } else {
+          return utils.stat(currentPath)
+            .then(function (fileStat) {
+              if (fileStat.isDirectory() && isValidDir(fileOrDir, dirOverride)) {
+                return readPackage(packageName, currentPath, dirOverride, blackListedEntries);
+              } else if (!fileStat.isDirectory() && isValidFile(fileOrDir, currentPath, packageName)) {
+                return currentPath;
+              }
+            });
+        }
       }))
         .then(function (hits) {
           return hits.reduce(function (entryPoints, hit) {
