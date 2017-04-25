@@ -11,8 +11,12 @@ module.exports = function (entries, packagePath) {
   var entryKeys = Object.keys(entries);
 
   return Promise.all(entryKeys.map(function (entryKey) {
-    if (entries[entryKey]) {
-      return findEntryPoints(entryKey, path.resolve(packagePath, 'node_modules', entryKey), path.dirname(entries[entryKey]));
+    var blackListedEntries = entries[entryKey].other.map(function (otherEntry) {
+      return path.resolve(packagePath, 'node_modules', entryKey, otherEntry)
+    })
+
+    if (entries[entryKey].main) {
+      return findEntryPoints(entryKey, path.resolve(packagePath, 'node_modules', entryKey), path.dirname(entries[entryKey].main), blackListedEntries);
     } else {
       return utils.readDir(path.resolve(packagePath, 'node_modules', entryKey))
         .then(function (dirs) {
@@ -28,13 +32,13 @@ module.exports = function (entries, packagePath) {
             return currentFallbackDir;
           }, '');
 
-          return findEntryPoints(entryKey, path.resolve(packagePath, 'node_modules', entryKey, fallbackDir), entries[entryKey]);
+          return findEntryPoints(entryKey, path.resolve(packagePath, 'node_modules', entryKey, fallbackDir), entries[entryKey].main, blackListedEntries);
         })
     }
   }))
     .then(function (entryPointsList) {
       return entryPointsList.reduce(function (entryPoints, entryPointList, index) {
-        var directEntryPath = entries[entryKeys[index]] ? path.resolve(packagePath, 'node_modules', entryKeys[index], entries[entryKeys[index]]) : null;
+        var directEntryPath = entries[entryKeys[index]] ? path.resolve(packagePath, 'node_modules', entryKeys[index], entries[entryKeys[index]].main) : null;
         if (directEntryPath && entryPointList.indexOf(directEntryPath) === -1) {
           entryPointList.push(directEntryPath);
         }
