@@ -36,6 +36,10 @@ module.exports = function resolveEntries (packages, packagePath) {
 
           var mainEntry = entryList.shift()
 
+          if (!mainEntry) {
+            mainEntry = './'
+          }
+
           if (path.extname(mainEntry)) {
             return entriesPromise.then(function (entries) {
               return Object.assign(entries, {
