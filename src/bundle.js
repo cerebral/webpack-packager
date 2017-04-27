@@ -2,14 +2,16 @@ var webpack = require('webpack');
 var path = require('path');
 var utils = require('./utils');
 var getVendors = require('./getVendors');
+var extractPackageJsonPaths = require('./extractPackageJsonPaths');
 
 module.exports = function (packagePath) {
   return function (entries) {
     return getVendors(entries, packagePath)
-      .then(function (vendors) {
+      .then(extractPackageJsonPaths(entries, packagePath))
+      .then(function (results) {
         var webpackConfig = {
           context: '/',
-          entry: { vendors: vendors },
+          entry: { vendors: results.vendors },
           output: {
             path: path.resolve(packagePath),
             filename: 'dll.js',
@@ -59,13 +61,13 @@ module.exports = function (packagePath) {
             var manifest = JSON.parse(manifestJson);
 
             manifest.content = utils.cleanManifestContent(manifest, entries, packagePath);
-            manifest.externals = utils.createExternals(manifest);
+            manifest.externals = utils.createExternals(manifest, results.packageJsons);
 
             return utils.writeFile(path.resolve(packagePath, 'manifest.json'), JSON.stringify(manifest, null, 2));
           })
-          .catch((err) => {
-            console.log(err);
-          })
-      });
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
   }
 }
