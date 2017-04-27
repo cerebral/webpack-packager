@@ -3,9 +3,10 @@ var utils = require('./utils');
 
 function isValidFile (file, filePath, packageName) {
   return (
-    (path.extname(file) === '.js' || path.extname(file) === '.css') &&
+    (path.extname(file) === '.js' || path.extname(file) === '.css' || path.basename(file) === 'package.json') &&
     file[0] !== '_' &&
     file !== 'gulpfile.js' &&
+    !file.match(/webpack/) &&
     !(file.substr(0, packageName.length) === packageName && path.extname(file) === '.js') &&
     !utils.isPrebundledFile(file) &&
     file.indexOf('.test.js') === -1 &&

@@ -102,8 +102,8 @@ module.exports = {
       return currentManifest;
     }, {});
   },
-  createExternals: function (manifest) {
-    return Object.keys(manifest.content).reduce(function (externals, manifestKey, index) {
+  createExternals: function (manifest, packageJsons) {
+    var externalsResult = Object.keys(manifest.content).reduce(function (externals, manifestKey, index) {
       var directPath = manifestKey.substr(2).split('/').slice(1).join('/');
       var fileName = path.basename(directPath)
       var extName = path.extname(directPath)
@@ -118,6 +118,12 @@ module.exports = {
 
       return externals;
     }, {});
+
+    packageJsons.forEach(function (packageJson) {
+      externalsResult[packageJson.path] = externalsResult[packageJson.main];
+    })
+
+    return externalsResult;
   },
   evaluateEntry: function (entry) {
     if (!entry) {
