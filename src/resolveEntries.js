@@ -50,22 +50,35 @@ module.exports = function resolveEntries (packages, packagePath) {
               });
             });
           } else {
-            return utils.stat(path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry))
-              .then(function (stat) {
+            return utils.stat(path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry + '.js'))
+              .then(function () {
                 return entriesPromise.then(function (entries) {
                   return Object.assign(entries, {
                     [packageJson.name]: {
-                      main: mainEntry,
+                      main: mainEntry + '.js',
                       other: entryList
                     }
                   });
                 });
               })
               .catch(function () {
+                return utils.stat(path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry, 'index.js'))
+              })
+              .then(() => {
                 return entriesPromise.then(function (entries) {
                   return Object.assign(entries, {
                     [packageJson.name]: {
-                      main: mainEntry + '.js',
+                      main: path.join(mainEntry, 'index.js'),
+                      other: entryList
+                    }
+                  });
+                });
+              })
+              .catch(() => {
+                return entriesPromise.then(function (entries) {
+                  return Object.assign(entries, {
+                    [packageJson.name]: {
+                      main: mainEntry,
                       other: entryList
                     }
                   });
