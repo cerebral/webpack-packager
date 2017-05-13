@@ -25,7 +25,7 @@ module.exports = function (packagePath) {
             new webpack.optimize.UglifyJsPlugin({minimize: true, mangle: false})
           ],
           resolve: {
-            modules: [path.resolve(packagePath, 'node_modules')]
+            modules: [path.resolve(packagePath, 'node_modules'), path.resolve('node_modules')]
           },
           resolveLoader: {
             alias: {
@@ -34,9 +34,6 @@ module.exports = function (packagePath) {
           },
           module: {
             loaders: [{
-              test: /\.json$/,
-              use: 'json-loader'
-            }, {
               test: /\.css$/,
               use: 'custom-css-loader'
             }]
