@@ -136,8 +136,8 @@ module.exports = {
 
     return entry[Object.keys(entry)[0]];
   },
-  getPackageName: function (package) {
-    const nameSplit = package.split('@');
+  getPackageName: function (pkg) {
+    const nameSplit = pkg.split('@');
 
     // Leading @
     if (!nameSplit[0]) {
@@ -149,8 +149,8 @@ module.exports = {
     return nameSplit[0];
   },
   isValidPackages: function (packages) {
-    return packages.split('+').reduce(function (isValid, package) {
-      if (package.indexOf('@') === -1) {
+    return packages.split('+').reduce(function (isValid, pkg) {
+      if (pkg.indexOf('@') === -1) {
         return false
       }
 
