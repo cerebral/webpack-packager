@@ -78,5 +78,7 @@ createTests({
   'apollo-client': '1.1.1',
   'axios': '0.16.1',
   'slate': '0.20.2',
-  'react-icons': '2.2.5'
+  'react-icons': '2.2.5',
+  'react-router-dom': '4.1.1',
+  'react-draggable': '2.2.6'
 })

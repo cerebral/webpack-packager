@@ -4,6 +4,7 @@ var utils = require('./utils');
 function isValidFile (file, filePath, packageName) {
   return (
     (path.extname(file) === '.js' || path.extname(file) === '.css' || path.basename(file) === 'package.json') &&
+    filePath.indexOf(packageName + '/index.js') === -1 &&
     file[0] !== '_' &&
     file !== 'gulpfile.js' &&
     !file.match(/webpack/) &&
