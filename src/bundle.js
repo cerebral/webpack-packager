@@ -58,7 +58,7 @@ module.exports = function (packagePath) {
             var manifest = JSON.parse(manifestJson);
 
             manifest.content = utils.cleanManifestContent(manifest, entries, packagePath);
-            manifest.externals = utils.createExternals(manifest, results.packageJsons);
+            manifest.externals = utils.createExternals(manifest, results.packageJsons, entries);
 
             return utils.writeFile(path.resolve(packagePath, 'manifest.json'), JSON.stringify(manifest, null, 2));
           })

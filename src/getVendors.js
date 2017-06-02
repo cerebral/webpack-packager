@@ -4,7 +4,8 @@ var findEntryPoints = require('./findEntryPoints');
 
 var fallbackDirs = [
   'lib',
-  'dist'
+  'dist',
+  'build'
 ];
 
 module.exports = function (entries, packagePath) {
@@ -32,13 +33,15 @@ module.exports = function (entries, packagePath) {
             return currentFallbackDir;
           }, '');
 
-          return findEntryPoints(entryKey, path.resolve(packagePath, 'node_modules', entryKey, fallbackDir), entries[entryKey].main, blackListedEntries);
+          entries[entryKey].fallbackDir = fallbackDir;
+
+          return findEntryPoints(entryKey, path.resolve(packagePath, 'node_modules', entryKey, fallbackDir), '.', blackListedEntries);
         })
     }
   }))
     .then(function (entryPointsList) {
       return entryPointsList.reduce(function (entryPoints, entryPointList, index) {
-        var directEntryPath = entries[entryKeys[index]] ? path.resolve(packagePath, 'node_modules', entryKeys[index], entries[entryKeys[index]].main) : null;
+        var directEntryPath = entries[entryKeys[index]].main ? path.resolve(packagePath, 'node_modules', entryKeys[index], entries[entryKeys[index]].main) : null;
         if (directEntryPath && entryPointList.indexOf(directEntryPath) === -1) {
           entryPointList.push(directEntryPath);
         }

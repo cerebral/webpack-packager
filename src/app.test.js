@@ -75,5 +75,8 @@ createTests({
   'mobx': '3.1.7',
   'vue': '2.2.4',
   'glamorous': '3.10.0',
-  'apollo-client': '1.1.1'
+  'apollo-client': '1.1.1',
+  'axios': '0.16.1',
+  'slate': '0.20.2',
+  'react-icons': '2.2.5'
 })

@@ -36,11 +36,7 @@ module.exports = function resolveEntries (packages, packagePath) {
 
           var mainEntry = entryList.shift()
 
-          if (!mainEntry) {
-            mainEntry = './'
-          }
-
-          if (path.extname(mainEntry)) {
+          if (mainEntry && path.extname(mainEntry)) {
             return entriesPromise.then(function (entries) {
               return Object.assign(entries, {
                 [packageJson.name]: {
@@ -49,7 +45,7 @@ module.exports = function resolveEntries (packages, packagePath) {
                 }
               });
             });
-          } else {
+          } else if (mainEntry) {
             return utils.stat(path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry + '.js'))
               .then(function () {
                 return entriesPromise.then(function (entries) {
@@ -84,8 +80,16 @@ module.exports = function resolveEntries (packages, packagePath) {
                     });
                   })
               })
+          } else {
+            return entriesPromise.then(function (entries) {
+              return Object.assign(entries, {
+                [packageJson.name]: {
+                  main: null,
+                  other: entryList
+                }
+              });
+            });
           }
-
         }, Promise.resolve({}))
       });
   }

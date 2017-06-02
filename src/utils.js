@@ -78,7 +78,7 @@ module.exports = {
   cleanManifestContent: function (manifest, entries, packagePath) {
     var entryKeys = Object.keys(entries);
     var entryPaths = entryKeys.reduce(function (currentEntryPaths, entryKey) {
-      return currentEntryPaths.concat(path.join(entryKey, entries[entryKey].main));
+      return currentEntryPaths.concat(path.join(entryKey, entries[entryKey].fallbackDir || entries[entryKey].main));
     }, []);
     var projectPath = path.resolve();
 
@@ -102,12 +102,17 @@ module.exports = {
       return currentManifest;
     }, {});
   },
-  createExternals: function (manifest, packageJsons) {
+  createExternals: function (manifest, packageJsons, entries) {
     var externalsResult = Object.keys(manifest.content).reduce(function (externals, manifestKey, index) {
       var directPath = manifestKey.substr(2).split('/').slice(1).join('/');
+      var entry = directPath.split('/')[0];
       var fileName = path.basename(directPath)
       var extName = path.extname(directPath)
       var baseName = path.basename(fileName, extName);
+
+      if (entries[entry] && entries[entry].fallbackDir) {
+        directPath = directPath.replace(entry + '/' + entries[entry].fallbackDir, entry);
+      }
 
       externals[directPath] = 'dll_bundle(' + manifest.content[manifestKey] + ')';
       externals[path.dirname(directPath) + '/' + baseName] = 'dll_bundle(' + manifest.content[manifestKey] + ')';
