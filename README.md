@@ -1,4 +1,6 @@
 # webpack-packager
+[![Build Status](https://travis-ci.org/cerebral/webpack-packager.svg?branch=master)](https://travis-ci.org/cerebral/webpack-packager)
+
 A service that packages DLL bundles and manifests
 
 1. Clone on some instance, for example vultr
