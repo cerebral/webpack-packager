@@ -45,7 +45,7 @@ function extractAndBundle (req, res) {
       currentTime = Date.now()
 
       verifyAvailability.isAvailable = true;
-      res.status(500).send(error.message);
+      res.status(500).send({ error: error.message });
 
       var stats = fs.lstatSync(packagePath);
       if (stats.isDirectory()) {

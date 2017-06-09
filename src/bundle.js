@@ -63,8 +63,5 @@ module.exports = function (packagePath) {
             return utils.writeFile(path.resolve(packagePath, 'manifest.json'), JSON.stringify(manifest, null, 2));
           })
       })
-      .catch(function (err) {
-        console.log(err);
-      })
   }
 }
