@@ -15,7 +15,7 @@
     "nodeunit": "^0.11.0"
   },
   "scripts": {
-    "test": "nodeunit src/app.test.js"
+    "test": "nodeunit test.js"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const extractAndBundle = require('./middleware/extractAndBundle');
+const extractAndBundle = require('./src/middleware/extractAndBundle');
 
 function getManifest (filePath) {
   return new Promise((resolve, reject) => {
@@ -23,7 +23,7 @@ function getManifest (filePath) {
 }
 
 function createTest (package, version) {
-  const filePath = path.resolve('src', 'manifests', encodeURIComponent(`${package}_${version}.json`));
+  const filePath = path.resolve('manifests', encodeURIComponent(`${package}_${version}.json`));
 
   return function (test) {
     test.expect(1);
