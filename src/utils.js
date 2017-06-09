@@ -131,15 +131,11 @@ module.exports = {
     return externalsResult;
   },
   evaluateEntry: function (entry) {
-    if (!entry) {
-      return null;
-    }
-
     if (typeof entry === 'string') {
       return entry;
     }
 
-    return entry[Object.keys(entry)[0]];
+    return null;
   },
   getPackageName: function (pkg) {
     const nameSplit = pkg.split('@');
