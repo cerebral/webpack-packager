@@ -35,13 +35,29 @@ module.exports = function resolveEntries (packages, packagePath) {
           })
 
           var mainEntry = entryList.shift()
+          var map = typeof packageJson.browser === 'object' && Object.keys(packageJson.browser).reduce((currentMap, key) => {
+            var entry = path.resolve(packagePath, 'node_modules', packageJson.name, key);
+            var mapping = path.resolve(packagePath, 'node_modules', packageJson.name, packageJson.browser[key]);
+
+            // If one of the mappings matches main entry, override it, as we do not
+            // want to bundle whatever is actually on main (angoliasearch). We create
+            // a reverse mapping with a DOT in front to make it easier to work with in manifest
+            if (entry === path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry)) {
+              mainEntry = packageJson.browser[key];
+            } else {
+              currentMap['.' + mapping] = entry;
+            }
+
+            return currentMap;
+          }, {});
 
           if (mainEntry && path.extname(mainEntry)) {
             return entriesPromise.then(function (entries) {
               return Object.assign(entries, {
                 [packageJson.name]: {
                   main: mainEntry,
-                  other: entryList
+                  other: entryList,
+                  map: map
                 }
               });
             });
@@ -52,7 +68,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                   return Object.assign(entries, {
                     [packageJson.name]: {
                       main: mainEntry + '.js',
-                      other: entryList
+                      other: entryList,
+                      map: map
                     }
                   });
                 });
@@ -64,7 +81,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                       return Object.assign(entries, {
                         [packageJson.name]: {
                           main: path.join(mainEntry, 'index.js'),
-                          other: entryList
+                          other: entryList,
+                          map: map
                         }
                       });
                     });
@@ -74,7 +92,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                       return Object.assign(entries, {
                         [packageJson.name]: {
                           main: mainEntry,
-                          other: entryList
+                          other: entryList,
+                          map: map
                         }
                       });
                     });
@@ -85,7 +104,8 @@ module.exports = function resolveEntries (packages, packagePath) {
               return Object.assign(entries, {
                 [packageJson.name]: {
                   main: null,
-                  other: entryList
+                  other: entryList,
+                  map: map
                 }
               });
             });

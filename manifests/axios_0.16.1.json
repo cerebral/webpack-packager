@@ -3,6 +3,7 @@
   "content": {
     "./node_modules/axios/lib/utils.js": 0,
     "./node_modules/axios/lib/adapters/xhr.js": 1,
+    "/node_modules/axios/lib/adapters/http.js": 1,
     "./node_modules/axios/lib/defaults.js": 2,
     "./node_modules/axios/lib/cancel/Cancel.js": 3,
     "./node_modules/axios/lib/cancel/isCancel.js": 4,
@@ -39,6 +40,8 @@
     "axios/lib/utils": "dll_bundle(0)",
     "axios/lib/adapters/xhr.js": "dll_bundle(1)",
     "axios/lib/adapters/xhr": "dll_bundle(1)",
+    "axios/lib/adapters/http.js": "dll_bundle(1)",
+    "axios/lib/adapters/http": "dll_bundle(1)",
     "axios/lib/defaults.js": "dll_bundle(2)",
     "axios/lib/defaults": "dll_bundle(2)",
     "axios/lib/cancel/Cancel.js": "dll_bundle(3)",

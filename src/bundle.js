@@ -9,9 +9,14 @@ module.exports = function (packagePath) {
     return getVendors(entries, packagePath)
       .then(extractPackageJsonPaths(entries, packagePath))
       .then(function (results) {
+        // Grab all extra entries related to browser mappings
+        var mapEntries = Object.keys(entries).reduce(function (currentMapEntries, entryKey) {
+          return currentMapEntries.concat(Object.keys(entries[entryKey].map || {}));
+        }, []);
+
         var webpackConfig = {
           context: '/',
-          entry: { vendors: results.vendors },
+          entry: { vendors: results.vendors.concat(mapEntries) },
           output: {
             path: path.resolve(packagePath),
             filename: 'dll.js',
