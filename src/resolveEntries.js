@@ -100,15 +100,29 @@ module.exports = function resolveEntries (packages, packagePath) {
                   })
               })
           } else {
-            return entriesPromise.then(function (entries) {
-              return Object.assign(entries, {
-                [packageJson.name]: {
-                  main: null,
-                  other: entryList,
-                  map: map
-                }
-              });
-            });
+            return utils.stat(path.resolve(packagePath, 'node_modules', packageJson.name, 'index.js'))
+              .then(() => {
+                return entriesPromise.then(function (entries) {
+                  return Object.assign(entries, {
+                    [packageJson.name]: {
+                      main: './index.js',
+                      other: entryList,
+                      map: map
+                    }
+                  });
+                });
+              })
+              .catch(() => {
+                return entriesPromise.then(function (entries) {
+                  return Object.assign(entries, {
+                    [packageJson.name]: {
+                      main: null,
+                      other: entryList,
+                      map: map
+                    }
+                  });
+                });
+              })
           }
         }, Promise.resolve({}))
       });
