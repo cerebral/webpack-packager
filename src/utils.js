@@ -119,10 +119,6 @@ module.exports = {
       var extName = path.extname(directPath)
       var baseName = path.basename(fileName, extName);
 
-      if (entries[entry] && entries[entry].fallbackDir) {
-        directPath = directPath.replace(entry + '/' + entries[entry].fallbackDir, entry);
-      }
-
       externals[directPath] = 'dll_bundle(' + manifest.content[manifestKey] + ')';
       externals[path.dirname(directPath) + '/' + baseName] = 'dll_bundle(' + manifest.content[manifestKey] + ')';
 
