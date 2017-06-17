@@ -82,6 +82,11 @@ module.exports = {
     }, []);
     var projectPath = path.resolve();
 
+    // Browser mappings
+    var mappings = entryKeys.reduce(function (currentMappings, entryKey) {
+      return Object.assign(currentMappings, entries[entryKey].map || {});
+    }, {});
+
     return Object.keys(manifest.content).reduce(function (currentManifest, key) {
       var entryMatchIndex = entryPaths.reduce(function (matchIndex, entryPath, index) {
         if (key === '.' + path.join(projectPath, packagePath, 'node_modules', entryPath)) {
@@ -98,6 +103,10 @@ module.exports = {
       }
 
       currentManifest[pathKey.replace(packagePath + '/', '')] = manifest.content[key].id;
+
+      if (mappings[key]) {
+        currentManifest[mappings[key].replace(projectPath, '').replace(packagePath + '/', '')] = manifest.content[key].id;
+      }
 
       return currentManifest;
     }, {});

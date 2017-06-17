@@ -81,5 +81,6 @@ createTests({
   'react-icons': '2.2.5',
   'react-router-dom': '4.1.1',
   'react-draggable': '2.2.6',
-  'todomvc-app-css': '2.1.0'
+  'todomvc-app-css': '2.1.0',
+  'algoliasearch': '3.23.0'
 })
