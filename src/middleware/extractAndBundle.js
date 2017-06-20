@@ -42,6 +42,7 @@ function extractAndBundle (req, res) {
     })
     .catch(function (error) {
       console.log('Error - ' + error.message + ' - ' + utils.getDuration(currentTime) + 's')
+      console.log(error.stack);
       currentTime = Date.now()
 
       verifyAvailability.isAvailable = true;
