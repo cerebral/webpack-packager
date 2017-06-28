@@ -37,6 +37,7 @@ module.exports = function (packagePath) {
               'custom-css-loader': require.resolve('./customCssLoader')
             }
           },
+          node: { fs: "empty" },
           module: {
             loaders: [{
               test: /\.css$/,
