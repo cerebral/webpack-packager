@@ -31,7 +31,8 @@ var invalidDirs = [
   'test',
   'testing',
   'min',
-  'node_modules'
+  'node_modules',
+  'flow-typed'
 ];
 
 function isValidDir (dir, dirOverride) {
