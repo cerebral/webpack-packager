@@ -13,6 +13,17 @@ module.exports = function (packagePath) {
         var mapEntries = Object.keys(entries).reduce(function (currentMapEntries, entryKey) {
           return currentMapEntries.concat(Object.keys(entries[entryKey].map || {}));
         }, []);
+        var emptyAliases = Object.keys(entries).reduce(function (currentAliases, entryKey) {
+          return currentAliases.concat(entries[entryKey].emptyModulesAliases);
+        }, []);
+
+        var alias = emptyAliases.reduce(function (result, emptyModule) {
+          return Object.assign(result, {
+            [emptyModule]: 'empty-module',
+          });
+        }, {
+          'custom-css-loader': require.resolve('./customCssLoader')
+        });
 
         var webpackConfig = {
           context: '/',
@@ -33,9 +44,7 @@ module.exports = function (packagePath) {
             modules: [path.resolve(packagePath, 'node_modules'), path.resolve('node_modules')]
           },
           resolveLoader: {
-            alias: {
-              'custom-css-loader': require.resolve('./customCssLoader')
-            }
+            alias: alias
           },
           node: { fs: "empty" },
           module: {

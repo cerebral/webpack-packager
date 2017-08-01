@@ -84,5 +84,6 @@ createTests({
   'todomvc-app-css': '2.1.0',
   'algoliasearch': '3.23.0',
   'history': '4.6.2',
-  'uuid': '3.1.0'
+  'uuid': '3.1.0',
+  'es6-promise': '4.1.1'
 })

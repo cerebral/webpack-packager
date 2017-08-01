@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "dependencies": {
     "compression": "^1.6.2",
+    "empty-module": "^0.0.2",
     "express": "^4.15.2",
     "express-cluster": "0.0.4",
     "string-hash": "^1.1.3",

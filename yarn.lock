@@ -887,6 +887,10 @@ emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
 
+empty-module@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/empty-module/-/empty-module-0.0.2.tgz#13b4dd8d4afeddd35e50c18dcd788c51087f1545"
+
 encodeurl@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.1.tgz#79e3d58655346909fe6f0f45a5de68103b294d20"

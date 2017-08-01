@@ -33,19 +33,24 @@ module.exports = function resolveEntries (packages, packagePath) {
 
             return 0;
           })
+          var emptyModulesAliases = [];
 
           var mainEntry = entryList.shift()
           var map = typeof packageJson.browser === 'object' && Object.keys(packageJson.browser).reduce((currentMap, key) => {
             var entry = path.resolve(packagePath, 'node_modules', packageJson.name, key);
-            var mapping = path.resolve(packagePath, 'node_modules', packageJson.name, packageJson.browser[key]);
-
+            
             // If one of the mappings matches main entry, override it, as we do not
             // want to bundle whatever is actually on main (angoliasearch). We create
             // a reverse mapping with a DOT in front to make it easier to work with in manifest
-            if (mainEntry && entry === path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry)) {
-              mainEntry = packageJson.browser[key];
+            if (packageJson.browser[key] === false) {
+              emptyModulesAliases.push(key);
             } else {
-              currentMap['.' + mapping] = entry;
+              if (mainEntry && entry === path.resolve(packagePath, 'node_modules', packageJson.name, mainEntry)) {
+                mainEntry = packageJson.browser[key];
+              } else {
+                var mapping = path.resolve(packagePath, 'node_modules', packageJson.name, packageJson.browser[key]);
+                currentMap['.' + mapping] = entry;
+              }
             }
 
             return currentMap;
@@ -57,7 +62,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                 [packageJson.name]: {
                   main: mainEntry,
                   other: entryList,
-                  map: map
+                  map: map,
+                  emptyModulesAliases: emptyModulesAliases
                 }
               });
             });
@@ -69,7 +75,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                     [packageJson.name]: {
                       main: mainEntry + '.js',
                       other: entryList,
-                      map: map
+                      map: map,
+                      emptyModulesAliases: emptyModulesAliases
                     }
                   });
                 });
@@ -82,7 +89,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                         [packageJson.name]: {
                           main: path.join(mainEntry, 'index.js'),
                           other: entryList,
-                          map: map
+                          map: map,
+                          emptyModulesAliases: emptyModulesAliases
                         }
                       });
                     });
@@ -93,7 +101,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                         [packageJson.name]: {
                           main: mainEntry,
                           other: entryList,
-                          map: map
+                          map: map,
+                          emptyModulesAliases: emptyModulesAliases
                         }
                       });
                     });
@@ -107,7 +116,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                     [packageJson.name]: {
                       main: './index.js',
                       other: entryList,
-                      map: map
+                      map: map,
+                      emptyModulesAliases: emptyModulesAliases
                     }
                   });
                 });
@@ -118,7 +128,8 @@ module.exports = function resolveEntries (packages, packagePath) {
                     [packageJson.name]: {
                       main: null,
                       other: entryList,
-                      map: map
+                      map: map,
+                      emptyModulesAliases: emptyModulesAliases
                     }
                   });
                 });
