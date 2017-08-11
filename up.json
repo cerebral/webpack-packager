@@ -1,0 +1,8 @@
+{
+  "name": "webpack-packager",
+  "regions": ["eu-west-1"],
+  "lambda": {
+    "memory": 1536,
+    "timeout": 300
+  }
+}

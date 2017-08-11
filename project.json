@@ -1,0 +1,8 @@
+{
+  "name": "webpack-packager",
+  "description": "Packager used by WebpackBin and CodeSandbox",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::201465446279:role/webpack-packager_lambda_function",
+  "environment": {}
+}
