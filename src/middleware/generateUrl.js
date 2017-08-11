@@ -2,7 +2,7 @@ var utils = require('../utils');
 var AWS = require('aws-sdk');
 var dependencyMapper = require('../dependencyMapper');
 
-var CLOUDFRONT_URL = 'https://packager.bundles.s3.amazonaws.com';
+var CLOUDFRONT_URL = 'http://packager.bundles.s3.amazonaws.com';
 
 var s3 = new AWS.S3();
 

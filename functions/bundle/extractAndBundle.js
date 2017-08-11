@@ -5,8 +5,6 @@ var bundle = require('./bundle');
 var utils = require('./utils');
 var AWS = require('aws-sdk');
 
-var CLOUDFRONT_URL = 'https://packager.bundles.s3.amazonaws.com';
-
 var s3 = new AWS.S3();
 
 var defaultCallback = function(err, data) {
