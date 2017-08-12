@@ -1,0 +1,10 @@
+{
+  "name": "uglifier",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.97.0",
+    "uglify-js": "3"
+  }
+}

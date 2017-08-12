@@ -25,6 +25,7 @@ module.exports.bundle = function(e, ctx, cb) {
           if (err) {
             console.error(err);
             cb(err);
+            return;
           }
 
           if (packagesData.Body == null) {

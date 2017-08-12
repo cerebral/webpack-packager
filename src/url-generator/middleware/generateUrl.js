@@ -49,15 +49,12 @@ function generateUrl(packages) {
 
     // Check if the file already exists, if it does we do nothing, otherwise
     // we create it. This will trigger the AWS bundle function
-    return maybeSaveData(
-      `${hash}/.packages`,
-      absolutePackages.join('+')
-    ).then(data => {
-      return {
-        url: `${CLOUDFRONT_URL}/${hash}`,
-        dependencies: absolutePackages,
-      };
-    });
+    maybeSaveData(`${hash}/.packages`, absolutePackages.join('+'));
+
+    return {
+      url: `${CLOUDFRONT_URL}/${hash}`,
+      dependencies: absolutePackages,
+    };
   });
 }
 module.exports = generateUrl;
