@@ -17,12 +17,13 @@ module.exports.uglify = (event, context, callback) => {
         (err, bundle) => {
           if (err) {
             console.error(err);
-            cb(err);
+            callback(err);
             return;
           }
 
-          if (bundle.Body === null) {
-            cb(new Error('No file at ' + file));
+          if (bundle.Body == null) {
+            console.error(file + ' not found');
+            callback(new Error('No file at ' + file));
             return;
           }
 
@@ -30,7 +31,7 @@ module.exports.uglify = (event, context, callback) => {
           const result = UglifyJS.minify(code);
 
           if (result.error) {
-            cb(result.error);
+            callback(result.error);
             return;
           } else {
             s3.putObject({
@@ -38,6 +39,8 @@ module.exports.uglify = (event, context, callback) => {
               Key: file.replace('.js', '.min.js'),
               ACL: 'public-read',
               Body: result.code,
+            }, (err) => {
+              callback(err);
             });
           }
         }

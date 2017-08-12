@@ -43,8 +43,8 @@ function extractAndBundle(absolutePackages, hash) {
     .then(function(files) {
       console.log('Success - ' + utils.getDuration(currentTime) + 's');
       if (process.env.IN_LAMBDA) {
-        saveFile(`${hash}/manifest.json`, JSON.stringify(files[0]));
-        saveFile(`${hash}/dll.js`, JSON.stringify(files[1]));
+        saveFile(`${hash}/manifest.json`, files[0]);
+        saveFile(`${hash}/dll.js`, files[1]);
       }
 
       return files;
