@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 var extract = require('./extract');
 var resolveEntries = require('./resolveEntries');
 var bundle = require('./bundle');
@@ -24,7 +25,7 @@ function saveFile(fileName, data, contentType) {
 
 function extractAndBundle(absolutePackages, hash) {
   var currentTime = Date.now();
-  var packagePath = `/tmp/packages/${hash}`;
+  var packagePath = fs.realpathSync(`/tmp/packages/${hash}`);
 
   console.log(
     'Started - ' + absolutePackages.join(', ') + ' - ' + new Date(currentTime)
