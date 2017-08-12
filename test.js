@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const extractAndBundle = require('./src/middleware/extractAndBundle');
+const extractAndBundle = require('./src/packager/extractAndBundle');
 
 function getManifest (filePath) {
   return new Promise((resolve, reject) => {
@@ -22,39 +22,31 @@ function getManifest (filePath) {
   })
 }
 
-function createTest (package, version) {
-  const filePath = path.resolve('manifests', encodeURIComponent(`${package}_${version}.json`));
+function createTest(package, version) {
+  const filePath = path.resolve(
+    'manifests',
+    encodeURIComponent(`${package}_${version}.json`)
+  );
 
-  return function (test) {
+  return function(test) {
     test.expect(1);
 
-    getManifest(filePath)
-      .then((manifest) => {
-        const req = {
-          params: {
-            packages: `${package}@${version}`
+    getManifest(filePath).then(manifest => {
+      extractAndBundle([`${package}@${version}`], 'testhash')
+        .then(([responseManifest, dll]) => {
+          if (manifest) {
+            test.deepEqual(JSON.parse(responseManifest), manifest);
+            console.log('TEST - Comparing existing manifest');
+          } else {
+            fs.writeFileSync(filePath, responseManifest, 'utf-8');
+            test.ok(true);
+            console.log('TEST - Wrote new manifest');
           }
-        }
-        const res = {
-          send(response) {
-            if (manifest) {
-              test.deepEqual(JSON.parse(response.manifest), manifest);
-              console.log('TEST - Comparing existing manifest');
-            } else {
-              fs.writeFileSync(filePath, response.manifest, 'utf-8');
-              test.ok(true);
-              console.log('TEST - Wrote new manifest');
-            }
-          },
-          status() {
-            throw Error()
-          }
-        }
-
-        return extractAndBundle(req, res)
-      })
-      .then(test.done).catch(test.done)
-  }
+        })
+        .then(test.done)
+        .catch(test.done);
+    });
+  };
 }
 
 function createTests (packages) {

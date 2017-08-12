@@ -20,7 +20,8 @@
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-prettier": "^2.3.0",
     "jest": "^20.0.4",
-    "nodeunit": "^0.11.0"
+    "nodeunit": "^0.11.0",
+    "serverless-plugin-warmup": "^3.0.5-rc.1"
   },
   "scripts": {
     "start": "node src"

@@ -21,20 +21,24 @@ provider:
   name: aws
   runtime: nodejs6.10
   memorySize: 1536
-  timeout: 300s
+  timeout: 300
   region: eu-west-1
 
-# you can add statements to the Lambda function's IAM Role here
-iamRoleStatements:
-  - Effect: "Allow"
-    Action:
-      - "s3:*"
-    Resource:
-      - "arn:aws:s3:::packager.bundles/*"
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::packager.bundles/*"
+    - Effect: 'Allow'
+      Action:
+        - 'lambda:InvokeFunction'
+      Resource: "*"
 
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
+  environment:
+    IN_LAMBDA: true
+
+plugins:
+  - serverless-plugin-warmup
 
 # you can add packaging information here
 #package:
@@ -48,6 +52,7 @@ iamRoleStatements:
 functions:
   bundle:
     handler: index.bundle
+    warmup: true
     events:
       - s3:
         bucket: packager.bundles

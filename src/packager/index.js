@@ -5,6 +5,11 @@ const s3 = new AWS.S3();
 
 console.log('starting function');
 module.exports.bundle = function(e, ctx, cb) {
+  if (e.source === 'serverless-plugin-warmup') {
+    console.log('WarmUP - Lambda is warm!')
+    return cb(null, 'Lambda is warm!')
+  }
+
   console.log(JSON.stringify(e, null, 2));
 
   e.Records.forEach(record => {
@@ -22,6 +27,11 @@ module.exports.bundle = function(e, ctx, cb) {
           if (err) {
             console.error(err);
             cb(err);
+          }
+
+          if (packagesData.Body == null) {
+            cb(null, 'No data');
+            return;
           }
 
           s3.getObject(

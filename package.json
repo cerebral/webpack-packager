@@ -23,6 +23,7 @@
     "nodeunit": "^0.11.0"
   },
   "scripts": {
+    "test": "nodeunit test.js",
     "start": "node src/url-generator"
   },
   "repository": {
