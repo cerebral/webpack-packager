@@ -4,25 +4,14 @@
   "description": "A service that packages DLL bundles and manifests",
   "main": "src/index.js",
   "dependencies": {
-    "aws-sdk": "^2.96.0",
-    "compression": "^1.6.2",
+    "aws-sdk": "^2.97.0",
     "empty-module": "^0.0.2",
-    "express": "^4.15.2",
-    "express-cluster": "0.0.4",
-    "pacote": "^4.0.0",
     "string-hash": "^1.1.3",
-    "webpack": "^2.3.3",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "webpack": "^3.5.4",
     "yarn": "^0.27.5"
   },
-  "devDependencies": {
-    "babel-eslint": "^7.2.3",
-    "eslint": "^4.4.1",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-config-prettier": "^2.3.0",
-    "jest": "^20.0.4",
-    "nodeunit": "^0.11.0",
-    "serverless-plugin-warmup": "^3.0.5-rc.1"
-  },
+  "devDependencies": {},
   "scripts": {
     "start": "node src"
   },

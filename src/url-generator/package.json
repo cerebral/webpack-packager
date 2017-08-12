@@ -1,0 +1,11 @@
+{
+  "name": "url-generator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.97.0",
+    "pacote": "^4.0.0",
+    "string-hash": "^1.1.3"
+  }
+}

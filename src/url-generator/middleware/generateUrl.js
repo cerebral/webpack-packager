@@ -2,15 +2,20 @@ var utils = require('../utils');
 var AWS = require('aws-sdk');
 var dependencyMapper = require('../dependencyMapper');
 
-var CLOUDFRONT_URL = 'https://d1f64oheldbse9.cloudfront.net';
+var CLOUDFRONT_URL =
+  process.env.SERVERLESS_STAGE === 'dev'
+    ? 'https://d1are1eif7hvx.cloudfront.net'
+    : 'https://d1f64oheldbse9.cloudfront.net';
 
 var s3 = new AWS.S3();
+
+const BUCKET_NAME = process.env.BUCKET_NAME;
 
 function maybeSaveData(fileName, packageData) {
   return new Promise((resolve, reject) => {
     s3.getObject(
       {
-        Bucket: 'packager.bundles',
+        Bucket: BUCKET_NAME,
         Key: fileName,
       },
       function(err, data) {
@@ -20,7 +25,7 @@ function maybeSaveData(fileName, packageData) {
           s3.putObject(
             {
               Body: packageData,
-              Bucket: 'packager.bundles',
+              Bucket: BUCKET_NAME,
               Key: fileName,
               ACL: 'public-read',
             },
@@ -36,40 +41,23 @@ function maybeSaveData(fileName, packageData) {
   });
 }
 
-function generateUrl(req, res) {
+function generateUrl(packages) {
   let currentTime = Date.now();
-  var packages = req.params.packages.split('+');
 
-  dependencyMapper(packages)
-    .then(absolutePackages => {
-      var hash = `${utils.getHash(absolutePackages)}`;
+  return dependencyMapper(packages).then(absolutePackages => {
+    var hash = `${utils.getHash(absolutePackages)}`;
 
-      // Check if the file already exists, if it does we do nothing, otherwise
-      // we create it. This will trigger the AWS bundle function
-      return maybeSaveData(
-        `${hash}/.packages`,
-        absolutePackages.join('+')
-      ).then(data => {
-        res.send(
-          JSON.stringify({
-            status: 'ok',
-            url: `${CLOUDFRONT_URL}/${hash}`,
-            dependencies: absolutePackages,
-          })
-        );
-      });
-    })
-    .catch(function(error) {
-      console.log(
-        'Error - ' +
-          error.message +
-          ' - ' +
-          utils.getDuration(currentTime) +
-          's'
-      );
-      console.log(error.stack);
-      currentTime = Date.now();
-      res.status(500).send({ error: error.message });
+    // Check if the file already exists, if it does we do nothing, otherwise
+    // we create it. This will trigger the AWS bundle function
+    return maybeSaveData(
+      `${hash}/.packages`,
+      absolutePackages.join('+')
+    ).then(data => {
+      return {
+        url: `${CLOUDFRONT_URL}/${hash}`,
+        dependencies: absolutePackages,
+      };
     });
+  });
 }
 module.exports = generateUrl;

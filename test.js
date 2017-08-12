@@ -35,7 +35,7 @@ function createTest(package, version) {
       extractAndBundle([`${package}@${version}`], 'testhash')
         .then(([responseManifest, dll]) => {
           if (manifest) {
-            test.deepEqual(JSON.parse(responseManifest), manifest);
+            test.deepEqual(JSON.parse(responseManifest).manifest, manifest.manifest);
             console.log('TEST - Comparing existing manifest');
           } else {
             fs.writeFileSync(filePath, responseManifest, 'utf-8');

@@ -13,6 +13,9 @@
 
 service: webpack-packager # NOTE: update this with your service name
 
+package:
+  individually: true
+
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
@@ -29,6 +32,10 @@ provider:
       Action:
         - "s3:*"
       Resource: "arn:aws:s3:::packager.bundles/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::dev.packager.bundles/*"
     - Effect: 'Allow'
       Action:
         - 'lambda:InvokeFunction'
@@ -36,6 +43,8 @@ provider:
 
   environment:
     IN_LAMBDA: true
+    SERVERLESS_STAGE: ${opt:stage}
+    BUCKET_NAME: ${opt:stage}.packager.bundles
 
 plugins:
   - serverless-plugin-warmup
@@ -51,14 +60,40 @@ plugins:
 
 functions:
   bundle:
-    handler: index.bundle
+    handler: src/packager/index.bundle
     warmup: true
+    package:
+      exclude:
+        - src/**
+        - node_modules/**
+      include: 
+        - src/packager/**
     events:
       - s3:
-        bucket: packager.bundles
-        event: s3:ObjectCreated:*
-        rules:
-          - suffix: .packages
+          bucket: ${opt:stage}.packager.bundles
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .packages
+  url-generator:
+    handler: src/url-generator/index.request
+    warmup: true
+    memorySize: 512
+    timeout: 15
+    package:
+      exclude:
+        - src/**
+        - node_modules/**
+      include: 
+        - src/url-generator/**
+    events:
+      - http: 
+          path: /package/{packages}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

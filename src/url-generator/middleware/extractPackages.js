@@ -1,12 +1,7 @@
 var utils = require('../utils');
 
-function extractPackages (req, res, next) {
-  req.params.packages = req.params['0'];
-  if (!utils.isValidPackages(req.params.packages)) {
-    res.sendStatus(404);
-  } else {
-    next();
-  }
+function extractPackages(packages) {
+  return utils.isValidPackages(packages);
 }
 
 module.exports = extractPackages;

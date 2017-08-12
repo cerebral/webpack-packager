@@ -15,7 +15,7 @@ function saveFile(fileName, data, callback = defaultCallback) {
   return s3.putObject(
     {
       Body: data,
-      Bucket: 'packager.bundles',
+      Bucket: process.env.BUCKET_NAME,
       Key: fileName,
       ACL: 'public-read',
     },
