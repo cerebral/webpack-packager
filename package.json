@@ -23,7 +23,7 @@
     "nodeunit": "^0.11.0"
   },
   "scripts": {
-    "start": "node src"
+    "start": "node src/url-generator"
   },
   "repository": {
     "type": "git",
