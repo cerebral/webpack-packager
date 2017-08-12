@@ -7,19 +7,18 @@ var AWS = require('aws-sdk');
 
 var s3 = new AWS.S3();
 
-var defaultCallback = function(err, data) {
-  if (err) console.log(err, err.stack); // an error occurred
-};
-
-function saveFile(fileName, data, callback = defaultCallback) {
+function saveFile(fileName, data, contentType) {
   return s3.putObject(
     {
       Body: data,
       Bucket: process.env.BUCKET_NAME,
       Key: fileName,
       ACL: 'public-read',
+      ContentType: contentType,
     },
-    callback
+    err => {
+      if (err) console.log(err, err.stack); // an error occurred
+    }
   );
 }
 
@@ -43,8 +42,8 @@ function extractAndBundle(absolutePackages, hash) {
     .then(function(files) {
       console.log('Success - ' + utils.getDuration(currentTime) + 's');
       if (process.env.IN_LAMBDA) {
-        saveFile(`${hash}/manifest.json`, files[0]);
-        saveFile(`${hash}/dll.js`, files[1]);
+        saveFile(`${hash}/manifest.json`, files[0], 'application/json');
+        saveFile(`${hash}/dll.js`, files[1], 'application/javascript');
       }
 
       return files;

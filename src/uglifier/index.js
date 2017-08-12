@@ -38,6 +38,7 @@ module.exports.uglify = (event, context, callback) => {
               Bucket: process.env.BUCKET_NAME,
               Key: file.replace('.js', '.min.js'),
               ACL: 'public-read',
+              ContentType: 'application/javascript',
               Body: result.code,
             }, (err) => {
               callback(err);
