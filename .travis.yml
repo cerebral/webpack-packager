@@ -6,6 +6,6 @@ node_js:
 
 install:
   - yarn
-  - cd src/packager && yarn
+  - cd src/packager && yarn && cd ../../
 
 cache: yarn
