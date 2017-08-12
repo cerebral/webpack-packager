@@ -25,7 +25,7 @@ function saveFile(fileName, data, contentType) {
 
 function extractAndBundle(absolutePackages, hash) {
   var currentTime = Date.now();
-  var packagePath = fs.realpathSync(`/tmp/packages/${hash}`);
+  var packagePath = `/tmp/packages/${hash}`;
 
   console.log(
     'Started - ' + absolutePackages.join(', ') + ' - ' + new Date(currentTime)

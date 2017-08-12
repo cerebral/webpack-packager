@@ -3,6 +3,14 @@ const extractAndBundle = require('./extractAndBundle');
 
 const s3 = new AWS.S3();
 
+function handleError(e, hash, cb) {
+  s3.deleteObject({
+    Bucket: process.env.BUCKET_NAME,
+    Key: `${hash}/.packages`,
+  });
+  cb(e);
+}
+
 console.log('starting function');
 module.exports.bundle = function(e, ctx, cb) {
   if (e.source === 'serverless-plugin-warmup') {
@@ -42,17 +50,17 @@ module.exports.bundle = function(e, ctx, cb) {
               if (!data) {
                 const packages = packagesData.Body.toString().split('+');
 
-                extractAndBundle(packages, hash)
-                  .then(a => {
-                    cb(null, 'success');
-                  })
-                  .catch(e => {
-                    s3.deleteObject({
-                      Bucket: process.env.BUCKET_NAME,
-                      Key: `${hash}/.packages`,
+                try {
+                  extractAndBundle(packages, hash)
+                    .then(a => {
+                      cb(null, 'success');
+                    })
+                    .catch(e => {
+                      handleError(e, hash, cb);
                     });
-                    cb(e);
-                  });
+                } catch (e) {
+                  handleError(e, hash, cb);
+                }
               }
             }
           );

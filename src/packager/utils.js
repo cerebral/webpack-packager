@@ -80,17 +80,19 @@ module.exports = {
     var entryPaths = entryKeys.reduce(function (currentEntryPaths, entryKey) {
       return currentEntryPaths.concat(path.join(entryKey, entries[entryKey].fallbackDir == null ? entries[entryKey].main : entries[entryKey].fallbackDir));
     }, []);
-    var projectPath = packagePath.replace(/packages\/.*/, '')
+
+    // Keeps symlinks in mind
+    var realPackagePath = fs.realpathSync(packagePath);
+    var projectPath = realPackagePath.replace(/packages\/.*/, '')
 
     // Browser mappings
     var mappings = entryKeys.reduce(function (currentMappings, entryKey) {
       return Object.assign(currentMappings, entries[entryKey].map || {});
     }, {});
 
-    console.log(Object.keys(manifest.content));
     return Object.keys(manifest.content).reduce(function (currentManifest, key) {
       var entryMatchIndex = entryPaths.reduce(function (matchIndex, entryPath, index) {
-        if (key === '.' + path.join(packagePath, 'node_modules', entryPath)) {
+        if (key === '.' + path.join(realPackagePath, 'node_modules', entryPath)) {
           return index;
         }
 
@@ -100,13 +102,13 @@ module.exports = {
       var pathKey = key.replace(projectPath, '/');
 
       if (entryMatchIndex >= 0) {
-        pathKey = '.' + path.join(packagePath, 'node_modules', entryKeys[entryMatchIndex]);
+        pathKey = '.' + path.join(realPackagePath, 'node_modules', entryKeys[entryMatchIndex]);
       }
 
       currentManifest[pathKey.replace(/.*node_modules\//, './node_modules/')] = manifest.content[key].id;
 
       if (mappings[key]) {
-        currentManifest[mappings[key].replace(projectPath, '').replace(packagePath + '/', '')] = manifest.content[key].id;
+        currentManifest[mappings[key].replace(projectPath, '').replace(realPackagePath + '/', '')] = manifest.content[key].id;
       }
 
       return currentManifest;
