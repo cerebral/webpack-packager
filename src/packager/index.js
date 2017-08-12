@@ -4,7 +4,7 @@ const extractAndBundle = require('./extractAndBundle');
 const s3 = new AWS.S3();
 
 console.log('starting function');
-exports.handle = function(e, ctx, cb) {
+module.exports.bundle = function(e, ctx, cb) {
   console.log(JSON.stringify(e, null, 2));
 
   e.Records.forEach(record => {
