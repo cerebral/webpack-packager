@@ -1,5 +1,23 @@
 const pacote = require('pacote');
 
+const cache = {};
+
+const MAX_TTL = 1000 * 60 * 10; // 10 minutes
+
+function getManifest(depString) {
+  if (cache[depString]) {
+    // Only use it if it's not expired
+    if (cache[depString].ttl + MAX_TTL > Date.now()) {
+      return cache[depString].promise;
+    }
+  }
+
+  const promise = pacote.manifest(depString);
+  cache[depString] = promise;
+
+  return promise;
+}
+
 /**
  * Gets the absolute versions of all dependencies
  *
@@ -13,7 +31,7 @@ function getAbsoluteVersions(dependencies) {
     dependencies.map(
       depString =>
         new Promise((resolve, reject) =>
-          pacote.manifest(depString)
+          getManifest(depString)
             .then(manifest => {
               const [depName] = depString.split('@');
               const absoluteVersion = manifest.version;

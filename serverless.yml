@@ -31,11 +31,7 @@ provider:
     - Effect: "Allow"
       Action:
         - "s3:*"
-      Resource: "arn:aws:s3:::packager.bundles/*"
-    - Effect: "Allow"
-      Action:
-        - "s3:*"
-      Resource: "arn:aws:s3:::dev.packager.bundles/*"
+      Resource: "arn:aws:s3:::${opt:stage}.packager.bundles/*"
     - Effect: 'Allow'
       Action:
         - 'lambda:InvokeFunction'
@@ -66,6 +62,8 @@ functions:
       exclude:
         - src/**
         - node_modules/**
+        - manifests/**
+        - packages/**
       include: 
         - src/packager/**
     events:
@@ -83,6 +81,8 @@ functions:
       exclude:
         - src/**
         - node_modules/**
+        - manifests/**
+        - packages/**
       include: 
         - src/url-generator/**
     events:

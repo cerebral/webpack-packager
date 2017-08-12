@@ -12,7 +12,7 @@ module.exports.request = (event, context, callback) => {
   const valid = extractPackages(packages);
 
   if (!valid) {
-    callback(new Error('Invalid packages'), {
+    callback(null, {
       statusCode: 404,
       body: JSON.stringify({
         status: 'error',
@@ -49,6 +49,6 @@ module.exports.request = (event, context, callback) => {
         }),
       };
 
-      callback(error, response);
+      callback(null, response);
     });
 };

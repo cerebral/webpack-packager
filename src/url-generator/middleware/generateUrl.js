@@ -5,7 +5,7 @@ var dependencyMapper = require('../dependencyMapper');
 var CLOUDFRONT_URL =
   process.env.SERVERLESS_STAGE === 'dev'
     ? 'https://d1are1eif7hvx.cloudfront.net'
-    : 'https://d1f64oheldbse9.cloudfront.net';
+    : 'https://d3i2v4dxqvxaq9.cloudfront.net';
 
 var s3 = new AWS.S3();
 
