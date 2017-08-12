@@ -40,7 +40,6 @@ function generateUrl(req, res) {
   let currentTime = Date.now();
   var packages = req.params.packages.split('+');
 
-
   dependencyMapper(packages)
     .then(absolutePackages => {
       var hash = `${utils.getHash(absolutePackages)}`;
@@ -55,6 +54,7 @@ function generateUrl(req, res) {
           JSON.stringify({
             status: 'ok',
             url: `${CLOUDFRONT_URL}/${hash}`,
+            dependencies: absolutePackages,
           })
         );
       });
