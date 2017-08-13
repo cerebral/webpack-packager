@@ -18,6 +18,15 @@ function getManifest(depString) {
   return promise;
 }
 
+function splitVersion(packageName) {
+  const parts = packageName.split('@');
+  if (packageName.startsWith('@')) {
+    return [`${parts[0]}@${parts[1]}`, parts[2]];
+  } else {
+    return [parts[0], parts[1]];
+  }
+}
+
 /**
  * Gets the absolute versions of all dependencies
  *
@@ -33,7 +42,7 @@ function getAbsoluteVersions(dependencies) {
         new Promise((resolve, reject) =>
           getManifest(depString)
             .then(manifest => {
-              const [depName] = depString.split('@');
+              const [depName] = splitVersion(depString);
               const absoluteVersion = manifest.version;
 
               resolve(`${depName}@${absoluteVersion}`);
