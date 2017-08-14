@@ -49,17 +49,5 @@ function extractAndBundle(absolutePackages, hash) {
 
       return files;
     })
-    .catch(function(error) {
-      console.log(
-        'Error - ' +
-          error.message +
-          ' - ' +
-          utils.getDuration(currentTime) +
-          's'
-      );
-      console.log(error.stack);
-      currentTime = Date.now();
-      res.status(500).send({ error: error.message });
-    });
 }
 module.exports = extractAndBundle;
