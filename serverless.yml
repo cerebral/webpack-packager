@@ -31,6 +31,7 @@ provider:
     - Effect: "Allow"
       Action:
         - "s3:*"
+        - "s3:DeleteObject"
       Resource: "arn:aws:s3:::${opt:stage}.packager.bundles/*"
     - Effect: 'Allow'
       Action:
