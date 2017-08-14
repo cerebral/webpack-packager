@@ -1,5 +1,6 @@
 var path = require('path');
 var fs = require('fs');
+var exec = require('child_process').exec;
 var extract = require('./extract');
 var resolveEntries = require('./resolveEntries');
 var bundle = require('./bundle');
@@ -40,14 +41,46 @@ function extractAndBundle(absolutePackages, hash) {
         utils.readFile(path.resolve(packagePath, 'dll.js')),
       ]);
     })
-    .then(function(files) {
-      console.log('Success - ' + utils.getDuration(currentTime) + 's');
-      if (process.env.IN_LAMBDA) {
-        saveFile(`${hash}/manifest.json`, files[0], 'application/json');
-        saveFile(`${hash}/dll.js`, files[1], 'application/javascript');
-      }
+    .then(
+      files =>
+        new Promise(resolve => {
+          console.log('Success - ' + utils.getDuration(currentTime) + 's');
+          currentTime = Date.now();
 
-      return files;
-    })
+          if (process.env.IN_LAMBDA) {
+            saveFile(`${hash}/manifest.json`, files[0], 'application/json');
+            saveFile(`${hash}/dll.js`, files[1], 'application/javascript');
+          }
+
+          return resolve(files);
+        })
+    )
+    .then(
+      files =>
+        new Promise((resolve, reject) => {
+          exec(`rm -rf ${packagePath}`, function(err, stdout, stderr) {
+            if (err) {
+              return reject(err);
+            }
+            console.log('Cleaned - ' + utils.getDuration(currentTime) + 's');
+
+            resolve(files);
+          });
+        })
+    )
+    .catch(
+      error =>
+        new Promise((resolve, reject) => {
+          var stats = fs.lstatSync(packagePath);
+          if (stats.isDirectory()) {
+            exec(`rm -rf ${packagePath}`, function(err, stdout, stderr) {
+              console.log('Cleaned - ' + utils.getDuration(currentTime) + 's');
+              reject(error);
+            });
+          } else {
+            reject(error);
+          }
+        })
+    );
 }
 module.exports = extractAndBundle;
