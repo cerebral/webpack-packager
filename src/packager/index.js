@@ -1,14 +1,24 @@
 const AWS = require('aws-sdk');
 const extractAndBundle = require('./extractAndBundle');
+var Raven = require('raven');
 
 const s3 = new AWS.S3();
 
-function handleError(e, hash, cb) {
+Raven.config('https://2b44251ab1c642fa8188b70b947d9eb0:9901826e22974a2b8b5397513e83cc53@sentry.io/203440').install();
+
+function handleError(e, hash, packages, cb) {
+  Raven.captureException(e, {
+    tags: {
+      hash,
+      packages
+    }
+  }, function() {
+    cb(e);
+  });
   s3.deleteObject({
     Bucket: process.env.BUCKET_NAME,
     Key: `${hash}/.packages`,
   });
-  cb(e);
 }
 
 console.log('starting function');
@@ -56,10 +66,10 @@ module.exports.bundle = function(e, ctx, cb) {
                       cb(null, 'success');
                     })
                     .catch(e => {
-                      handleError(e, hash, cb);
+                      handleError(e, hash, packages, cb);
                     });
                 } catch (e) {
-                  handleError(e, hash, cb);
+                  handleError(e, hash, packages, cb);
                 }
               }
             }
