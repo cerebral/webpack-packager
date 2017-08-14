@@ -2,6 +2,9 @@ const AWS = require('aws-sdk');
 const extractAndBundle = require('./extractAndBundle');
 var Raven = require('raven');
 
+// Installs git for git repos
+require("lambda-git")();
+
 const s3 = new AWS.S3();
 
 Raven.config('https://2b44251ab1c642fa8188b70b947d9eb0:9901826e22974a2b8b5397513e83cc53@sentry.io/203440').install();

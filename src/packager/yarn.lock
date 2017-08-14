@@ -1285,6 +1285,12 @@ kind-of@^4.0.0:
   dependencies:
     is-buffer "^1.1.5"
 
+lambda-git@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/lambda-git/-/lambda-git-0.1.1.tgz#a83a3a337cd400f72fc86d362656c0537ec312a7"
+  dependencies:
+    tar-fs "^1.14.0"
+
 lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
@@ -2143,7 +2149,7 @@ tapable@^0.2.7:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-0.2.8.tgz#99372a5c999bf2df160afc0d74bed4f47948cd22"
 
-tar-fs@^1.15.1:
+tar-fs@^1.14.0, tar-fs@^1.15.1:
   version "1.15.3"
   resolved "https://registry.yarnpkg.com/tar-fs/-/tar-fs-1.15.3.tgz#eccf935e941493d8151028e636e51ce4c3ca7f20"
   dependencies:
