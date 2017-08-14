@@ -13,11 +13,12 @@ function handleError(e, hash, packages, cb) {
       packages
     }
   }, function() {
-    cb(e);
-  });
-  s3.deleteObject({
-    Bucket: process.env.BUCKET_NAME,
-    Key: `${hash}/.packages`,
+    s3.deleteObject({
+      Bucket: process.env.BUCKET_NAME,
+      Key: `${hash}/.packages`,
+    }, (err, data) => {
+      cb(e);
+    });
   });
 }
 
