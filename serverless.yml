@@ -72,27 +72,27 @@ functions:
           event: s3:ObjectCreated:*
           rules:
             - suffix: .packages
-  uglifier:
-    handler: src/uglifier/index.uglify
-    memorySize: 512
-    package:
-      exclude:
-        - src/**
-        - node_modules/**
-        - manifests/**
-        - packages/**
-      include: 
-        - src/uglifier/**
-    events:
-      - s3:
-          bucket: ${opt:stage}.packager.bundles
-          event: s3:ObjectCreated:*
-          rules:
-            - suffix: dll.js
+  # uglifier:
+  #   handler: src/uglifier/index.uglify
+  #   memorySize: 512
+  #   package:
+  #     exclude:
+  #       - src/**
+  #       - node_modules/**
+  #       - manifests/**
+  #       - packages/**
+  #     include: 
+  #       - src/uglifier/**
+  #   events:
+  #     - s3:
+  #         bucket: ${opt:stage}.packager.bundles
+  #         event: s3:ObjectCreated:*
+  #         rules:
+  #           - suffix: dll.js
   url-generator:
     handler: src/url-generator/index.request
     warmup: true
-    memorySize: 512
+    memorySize: 1024
     timeout: 15
     package:
       exclude:
