@@ -16,11 +16,18 @@ function handleError(e, hash, packages, cb) {
       packages
     }
   }, function() {
+    console.log(`Deleting ${hash}/.packages`)
     s3.deleteObject({
       Bucket: process.env.BUCKET_NAME,
       Key: `${hash}/.packages`,
     }, (err, data) => {
-      cb(e);
+      if (err) {
+        console.error(`FAILED TO DELETE ${hash}/.packages!`)
+        cb(err);
+      } else {
+        console.log(`Deleted ${hash}/.packages`)
+        cb(e);
+      }
     });
   });
 }
