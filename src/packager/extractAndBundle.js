@@ -41,20 +41,17 @@ function extractAndBundle(absolutePackages, hash) {
         utils.readFile(path.resolve(packagePath, 'dll.js')),
       ]);
     })
-    .then(
-      files =>
-        new Promise(resolve => {
-          console.log('Success - ' + utils.getDuration(currentTime) + 's');
-          currentTime = Date.now();
+    .then(files => {
+      console.log('Success - ' + utils.getDuration(currentTime) + 's');
+      currentTime = Date.now();
 
-          if (process.env.IN_LAMBDA) {
-            saveFile(`${hash}/manifest.json`, files[0], 'application/json');
-            saveFile(`${hash}/dll.js`, files[1], 'application/javascript');
-          }
+      if (process.env.IN_LAMBDA) {
+        saveFile(`${hash}/manifest.json`, files[0], 'application/json');
+        saveFile(`${hash}/dll.js`, files[1], 'application/javascript');
+      }
 
-          return resolve(files);
-        })
-    )
+      return files;
+    })
     .then(
       files =>
         new Promise((resolve, reject) => {

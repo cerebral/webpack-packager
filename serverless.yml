@@ -58,7 +58,6 @@ plugins:
 functions:
   bundle:
     handler: src/packager/index.bundle
-    warmup: true
     package:
       exclude:
         - src/**
