@@ -47,10 +47,13 @@ module.exports.bundle = function(e, ctx, cb) {
     return cb(null, 'Lambda is warm!');
   }
 
+  const currentTime = Date.now();
   exec(`rm -rf /tmp/*`, function(err, stdout, stderr) {
     if (err) {
       return cb(err);
     }
+
+    console.log('Cleaned /tmp in ' + (Date.now() - currentTime) + 'ms');
 
     e.Records.forEach(record => {
       if (record.s3) {
