@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const extractAndBundle = require('./extractAndBundle');
-var Raven = require('raven');
+const Raven = require('raven');
+const exec = require('child_process').exec;
 
 // Installs git for git repos
 require('lambda-git')();
@@ -46,54 +47,60 @@ module.exports.bundle = function(e, ctx, cb) {
     return cb(null, 'Lambda is warm!');
   }
 
-  e.Records.forEach(record => {
-    if (record.s3) {
-      const file = record.s3.object.key;
-      console.log('Got request for file ' + file);
-      const [hash] = file.split('/');
+  exec(`rm -rf /tmp/*`, function(err, stdout, stderr) {
+    if (err) {
+      return cb(err);
+    }
 
-      s3.getObject(
-        {
-          Bucket: process.env.BUCKET_NAME,
-          Key: `${hash}/.packages`,
-        },
-        (err, packagesData) => {
-          if (err) {
-            console.error(err);
-            cb(err);
-            return;
-          }
+    e.Records.forEach(record => {
+      if (record.s3) {
+        const file = record.s3.object.key;
+        console.log('Got request for file ' + file);
+        const [hash] = file.split('/');
 
-          if (packagesData.Body == null) {
-            cb(null, 'No data');
-            return;
-          }
+        s3.getObject(
+          {
+            Bucket: process.env.BUCKET_NAME,
+            Key: `${hash}/.packages`,
+          },
+          (err, packagesData) => {
+            if (err) {
+              console.error(err);
+              cb(err);
+              return;
+            }
 
-          s3.getObject(
-            {
-              Bucket: process.env.BUCKET_NAME,
-              Key: `${hash}/dll.js`,
-            },
-            (err, data) => {
-              if (!data) {
-                const packages = packagesData.Body.toString().split('+');
+            if (packagesData.Body == null) {
+              cb(null, 'No data');
+              return;
+            }
 
-                try {
-                  extractAndBundle(packages, hash)
-                    .then(a => {
-                      cb(null, 'success');
-                    })
-                    .catch(e => {
-                      handleError(e, hash, packages, cb);
-                    });
-                } catch (e) {
-                  handleError(e, hash, packages, cb);
+            s3.getObject(
+              {
+                Bucket: process.env.BUCKET_NAME,
+                Key: `${hash}/dll.js`,
+              },
+              (err, data) => {
+                if (!data) {
+                  const packages = packagesData.Body.toString().split('+');
+
+                  try {
+                    extractAndBundle(packages, hash)
+                      .then(a => {
+                        cb(null, 'success');
+                      })
+                      .catch(e => {
+                        handleError(e, hash, packages, cb);
+                      });
+                  } catch (e) {
+                    handleError(e, hash, packages, cb);
+                  }
                 }
               }
-            }
-          );
-        }
-      );
-    }
+            );
+          }
+        );
+      }
+    });
   });
 };

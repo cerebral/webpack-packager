@@ -51,33 +51,6 @@ function extractAndBundle(absolutePackages, hash) {
       }
 
       return files;
-    })
-    .then(
-      files =>
-        new Promise((resolve, reject) => {
-          exec(`rm -rf ${packagePath}`, function(err, stdout, stderr) {
-            if (err) {
-              return reject(err);
-            }
-            console.log('Cleaned - ' + utils.getDuration(currentTime) + 's');
-
-            resolve(files);
-          });
-        })
-    )
-    .catch(error => {
-      console.log('ERROR');
-      console.log(error.message);
-
-      var stats = fs.lstatSync(packagePath);
-      if (stats.isDirectory()) {
-        exec(`rm -rf ${packagePath}`, function(err, stdout, stderr) {
-          console.log('Cleaned - ' + utils.getDuration(currentTime) + 's');
-          throw error;
-        });
-      } else {
-        throw error;
-      }
     });
 }
 module.exports = extractAndBundle;
