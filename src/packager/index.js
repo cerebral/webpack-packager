@@ -3,33 +3,40 @@ const extractAndBundle = require('./extractAndBundle');
 var Raven = require('raven');
 
 // Installs git for git repos
-require("lambda-git")();
+require('lambda-git')();
 
 const s3 = new AWS.S3();
 
-Raven.config('https://2b44251ab1c642fa8188b70b947d9eb0:9901826e22974a2b8b5397513e83cc53@sentry.io/203440').install();
+Raven.config(
+  'https://2b44251ab1c642fa8188b70b947d9eb0:9901826e22974a2b8b5397513e83cc53@sentry.io/203440'
+).install();
 
 function handleError(e, hash, packages, cb) {
-  Raven.captureException(e, {
-    tags: {
-      hash,
-      packages
+  Raven.captureException(
+    e,
+    {
+      tags: {
+        hash,
+        packages,
+      },
+    },
+    function() {
+      cb(e);
+      // console.log(`Deleting ${hash}/.packages`)
+      // s3.deleteObject({
+      //   Bucket: process.env.BUCKET_NAME,
+      //   Key: `${hash}/.packages`,
+      // }, (err, data) => {
+      //   if (err) {
+      //     console.error(`FAILED TO DELETE ${hash}/.packages!`)
+      //     cb(err);
+      //   } else {
+      //     console.log(`Deleted ${hash}/.packages`)
+      //     cb(e);
+      //   }
+      // });
     }
-  }, function() {
-    console.log(`Deleting ${hash}/.packages`)
-    s3.deleteObject({
-      Bucket: process.env.BUCKET_NAME,
-      Key: `${hash}/.packages`,
-    }, (err, data) => {
-      if (err) {
-        console.error(`FAILED TO DELETE ${hash}/.packages!`)
-        cb(err);
-      } else {
-        console.log(`Deleted ${hash}/.packages`)
-        cb(e);
-      }
-    });
-  });
+  );
 }
 
 console.log('starting function');

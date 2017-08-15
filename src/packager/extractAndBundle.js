@@ -66,6 +66,9 @@ function extractAndBundle(absolutePackages, hash) {
         })
     )
     .catch(error => {
+      console.log('ERROR');
+      console.log(error.message);
+
       var stats = fs.lstatSync(packagePath);
       if (stats.isDirectory()) {
         exec(`rm -rf ${packagePath}`, function(err, stdout, stderr) {
