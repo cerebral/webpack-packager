@@ -65,19 +65,16 @@ function extractAndBundle(absolutePackages, hash) {
           });
         })
     )
-    .catch(
-      error =>
-        new Promise((resolve, reject) => {
-          var stats = fs.lstatSync(packagePath);
-          if (stats.isDirectory()) {
-            exec(`rm -rf ${packagePath}`, function(err, stdout, stderr) {
-              console.log('Cleaned - ' + utils.getDuration(currentTime) + 's');
-              reject(error);
-            });
-          } else {
-            reject(error);
-          }
-        })
-    );
+    .catch(error => {
+      var stats = fs.lstatSync(packagePath);
+      if (stats.isDirectory()) {
+        exec(`rm -rf ${packagePath}`, function(err, stdout, stderr) {
+          console.log('Cleaned - ' + utils.getDuration(currentTime) + 's');
+          throw error;
+        });
+      } else {
+        throw error;
+      }
+    });
 }
 module.exports = extractAndBundle;
