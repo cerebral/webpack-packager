@@ -34,11 +34,14 @@ module.exports = function (packagePath) {
             library: 'dll_bundle'
           },
           plugins: [
+            new webpack.DefinePlugin({
+              'process.env.NODE_ENV': JSON.stringify('development'),
+            }),
             new webpack.DllPlugin({
               path: path.resolve(packagePath, 'manifest.json'),
               name: 'dll_bundle'
             }),
-            new webpack.optimize.UglifyJsPlugin({minimize: true, mangle: false})
+            // new webpack.optimize.UglifyJsPlugin({minimize: true, mangle: false})
           ],
           resolve: {
             modules: [path.resolve(packagePath, 'node_modules'), path.resolve('node_modules')]
