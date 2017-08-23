@@ -85,5 +85,6 @@ createTests({
   'algoliasearch': '3.23.0',
   'history': '4.6.2',
   'uuid': '3.1.0',
-  'es6-promise': '4.1.1'
+  'es6-promise': '4.1.1',
+  'downshift': '1.0.0'
 })

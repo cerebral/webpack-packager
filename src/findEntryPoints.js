@@ -8,7 +8,6 @@ function isValidFile (file, filePath, packageName) {
     file[0] !== '_' &&
     file !== 'gulpfile.js' &&
     !file.match(/webpack/) &&
-    !(file.substr(0, packageName.length) === packageName && path.extname(file) === '.js') &&
     !utils.isPrebundledFile(file) &&
     file.indexOf('.test.js') === -1 &&
     file.indexOf('-test.js') === -1 &&

@@ -11,8 +11,9 @@
     "./node_modules/history/createMemoryHistory.js": 7,
     "./node_modules/invariant/browser.js": 8,
     "./node_modules/history": 9,
-    "./node_modules/resolve-pathname/index.js": 10,
-    "./node_modules/value-equal/index.js": 11
+    "./node_modules/history/umd/history.js": 10,
+    "./node_modules/resolve-pathname/index.js": 11,
+    "./node_modules/value-equal/index.js": 12
   },
   "externals": {
     "history/PathUtils.js": "dll_bundle(0)",
@@ -35,11 +36,13 @@
     "invariant/browser": "dll_bundle(8)",
     "history": "dll_bundle(9)",
     "./history": "dll_bundle(9)",
-    "resolve-pathname/index.js": "dll_bundle(10)",
-    "resolve-pathname/index": "dll_bundle(10)",
-    "resolve-pathname": "dll_bundle(10)",
-    "value-equal/index.js": "dll_bundle(11)",
-    "value-equal/index": "dll_bundle(11)",
-    "value-equal": "dll_bundle(11)"
+    "history/umd/history.js": "dll_bundle(10)",
+    "history/umd/history": "dll_bundle(10)",
+    "resolve-pathname/index.js": "dll_bundle(11)",
+    "resolve-pathname/index": "dll_bundle(11)",
+    "resolve-pathname": "dll_bundle(11)",
+    "value-equal/index.js": "dll_bundle(12)",
+    "value-equal/index": "dll_bundle(12)",
+    "value-equal": "dll_bundle(12)"
   }
 }
